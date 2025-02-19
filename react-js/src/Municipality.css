@@ -1,0 +1,115 @@
+.municipality-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.municipality-summary.empty {
+  color: #666;
+  font-style: italic;
+}
+
+.municipality-summary .icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.municipality-summary .content {
+  color: #666;
+}
+
+.municipality-detail {
+  padding: 8px 0;
+}
+
+.municipality-detail.empty {
+  color: #666;
+  font-style: italic;
+  padding: 12px;
+}
+
+.municipality-detail .level-section {
+  margin-bottom: 16px;
+}
+
+.municipality-detail .level-section:last-child {
+  margin-bottom: 0;
+}
+
+.municipality-detail h4 {
+  margin: 0 0 8px 0;
+  color: #666;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.municipality-detail .fields {
+  display: grid;
+  gap: 8px;
+}
+
+.municipality-detail .field-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+}
+
+.municipality-detail .field-display {
+  color: #333;
+}
+
+.municipality-detail .value-input {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+.municipality-detail .value-input:focus {
+  outline: none;
+  border-color: #999;
+}
+
+.municipality-detail .value-input.iso {
+  width: 80px;
+}
+
+.municipality-detail .iso-code {
+  color: #666;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+.municipality-detail .actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+
+.municipality-detail .clear-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.municipality-detail .clear-button:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+.municipality-detail .clear-button:active {
+  background-color: #e8e8e8;
+}

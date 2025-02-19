@@ -1,0 +1,426 @@
+/* src/Address.css */
+.address-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.address-summary.empty {
+  color: #666;
+  font-style: italic;
+}
+.address-summary .icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.address-summary .content {
+  color: #666;
+}
+.address-detail {
+  padding: 8px 0;
+}
+.address-detail.empty {
+  color: #666;
+  font-style: italic;
+  padding: 12px;
+}
+.address-detail .fields {
+  display: grid;
+  gap: 8px;
+}
+.address-detail .field-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.address-detail .label {
+  color: #666;
+  font-weight: 500;
+}
+.address-detail .value {
+  color: #333;
+}
+.address-detail .value-input {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+.address-detail .value-input:focus {
+  outline: none;
+  border-color: #999;
+}
+.address-detail .actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+.address-detail .clear-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+.address-detail .clear-button:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+.address-detail .clear-button:active {
+  background-color: #e8e8e8;
+}
+
+/* src/DateTime.css */
+.datetime-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  font-family: monospace;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.datetime-preview:hover {
+  border-color: #ccc;
+}
+.datetime-preview.empty {
+  color: #666;
+  font-style: italic;
+  cursor: default;
+}
+.datetime-preview .date,
+.datetime-preview .time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.datetime-preview .icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.datetime-detail {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+}
+.datetime-detail.empty {
+  color: #666;
+  font-style: italic;
+  padding: 12px;
+}
+.datetime-detail .date-section,
+.datetime-detail .time-section {
+  margin-bottom: 16px;
+}
+.datetime-detail h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.datetime-detail h3 .icon {
+  font-size: 1.2em;
+  line-height: 1;
+}
+.datetime-detail .date-content,
+.datetime-detail .time-content {
+  display: grid;
+  gap: 8px;
+  padding-left: 28px;
+}
+.datetime-detail .date-row,
+.datetime-detail .time-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
+}
+.datetime-detail .label {
+  color: #666;
+  font-weight: 500;
+}
+.datetime-detail .value {
+  font-family: monospace;
+}
+.datetime-detail .actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+.clear-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+.clear-button:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+.clear-button:active {
+  background-color: #e8e8e8;
+}
+
+/* src/Municipality.css */
+.municipality-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.municipality-summary.empty {
+  color: #666;
+  font-style: italic;
+}
+.municipality-summary .icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.municipality-summary .content {
+  color: #666;
+}
+.municipality-detail {
+  padding: 8px 0;
+}
+.municipality-detail.empty {
+  color: #666;
+  font-style: italic;
+  padding: 12px;
+}
+.municipality-detail .level-section {
+  margin-bottom: 16px;
+}
+.municipality-detail .level-section:last-child {
+  margin-bottom: 0;
+}
+.municipality-detail h4 {
+  margin: 0 0 8px 0;
+  color: #666;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+.municipality-detail .fields {
+  display: grid;
+  gap: 8px;
+}
+.municipality-detail .field-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+}
+.municipality-detail .field-display {
+  color: #333;
+}
+.municipality-detail .value-input {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+.municipality-detail .value-input:focus {
+  outline: none;
+  border-color: #999;
+}
+.municipality-detail .value-input.iso {
+  width: 80px;
+}
+.municipality-detail .iso-code {
+  color: #666;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+.municipality-detail .actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+.municipality-detail .clear-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+.municipality-detail .clear-button:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+.municipality-detail .clear-button:active {
+  background-color: #e8e8e8;
+}
+
+/* src/Where.css */
+.where-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.where-summary:hover {
+  border-color: #ccc;
+}
+.where-summary.empty {
+  color: #666;
+  font-style: italic;
+  cursor: default;
+}
+.where-summary .icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.where-summary .name {
+  font-weight: 500;
+}
+.where-summary .details {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.where-detail {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+}
+.where-detail.empty {
+  color: #666;
+  font-style: italic;
+  padding: 12px;
+}
+.where-detail .name-section,
+.where-detail .address-section,
+.where-detail .municipality-section,
+.where-detail .geo-section {
+  margin-bottom: 24px;
+}
+.where-detail .name-section:last-child,
+.where-detail .address-section:last-child,
+.where-detail .municipality-section:last-child,
+.where-detail .geo-section:last-child {
+  margin-bottom: 0;
+}
+.where-detail h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.where-detail h3 .icon {
+  font-size: 1.2em;
+  line-height: 1;
+}
+.where-detail .name-content {
+  display: grid;
+  gap: 8px;
+  padding-left: 28px;
+}
+.where-detail .name-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.where-detail .label {
+  color: #666;
+  font-weight: 500;
+}
+.where-detail .value {
+  color: #333;
+}
+.where-detail .value-input {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+.where-detail .value-input:focus {
+  outline: none;
+  border-color: #999;
+}
+.where-detail .geo-content {
+  padding-left: 28px;
+}
+.where-detail .geo-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.where-detail .geo-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.where-detail .value-input.coordinate {
+  width: 100%;
+}
+.where-detail .actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+.where-detail .clear-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+.where-detail .clear-button:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+.where-detail .clear-button:active {
+  background-color: #e8e8e8;
+}
+/*# sourceMappingURL=index.css.map */

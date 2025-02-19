@@ -1,0 +1,164 @@
+.where-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+  
+  .where-summary:hover {
+    border-color: #ccc;
+  }
+  
+  .where-summary.empty {
+    color: #666;
+    font-style: italic;
+    cursor: default;
+  }
+  
+  .where-summary .icon {
+    font-size: 14px;
+    line-height: 1;
+  }
+  
+  .where-summary .name {
+    font-weight: 500;
+  }
+  
+  .where-summary .details {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .where-detail {
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .where-detail.empty {
+    color: #666;
+    font-style: italic;
+    padding: 12px;
+  }
+  
+  .where-detail .name-section,
+  .where-detail .address-section,
+  .where-detail .municipality-section,
+  .where-detail .geo-section {
+    margin-bottom: 24px;
+  }
+  
+  .where-detail .name-section:last-child,
+  .where-detail .address-section:last-child,
+  .where-detail .municipality-section:last-child,
+  .where-detail .geo-section:last-child {
+    margin-bottom: 0;
+  }
+  
+  .where-detail h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px 0;
+    color: #333;
+    font-size: 1.1em;
+    font-weight: 600;
+  }
+  
+  .where-detail h3 .icon {
+    font-size: 1.2em;
+    line-height: 1;
+  }
+  
+  .where-detail .name-content {
+    display: grid;
+    gap: 8px;
+    padding-left: 28px;
+  }
+  
+  .where-detail .name-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .where-detail .label {
+    color: #666;
+    font-weight: 500;
+  }
+  
+  .where-detail .value {
+    color: #333;
+  }
+  
+  .where-detail .value-input {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    transition: border-color 0.2s ease;
+  }
+  
+  .where-detail .value-input:focus {
+    outline: none;
+    border-color: #999;
+  }
+  
+  .where-detail .geo-content {
+    padding-left: 28px;
+  }
+  
+  .where-detail .geo-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .where-detail .geo-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .where-detail .value-input.coordinate {
+    width: 100%;
+  }
+  
+  .where-detail .actions {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+  }
+  
+  .where-detail .clear-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  
+  .where-detail .clear-button:hover {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+  }
+  
+  .where-detail .clear-button:active {
+    background-color: #e8e8e8;
+  }
