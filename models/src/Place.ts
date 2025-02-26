@@ -6,7 +6,7 @@
  */
 import * as Introspection from 'typescript-introspection';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Place.${path}`;
 
@@ -23,5 +23,5 @@ export const Domain = new Values.AggregateDomain(makePath('Domain'), {
 }, [ 'shortName', 'longName', 'iso']);
 
 directory.add(Domain);
-type ValueType = Introspection.getValueType<typeof Domain>;
-export default ValueType;
+export type Value = Introspection.getValueType<typeof Domain>;
+export default Value;

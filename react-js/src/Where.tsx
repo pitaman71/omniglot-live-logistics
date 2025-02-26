@@ -1,46 +1,35 @@
 import React from 'react';
-import Where from 'omniglot-live-media-models/lib/Where';
+import { Where, Parseable } from 'omniglot-live-logistics-models';
 import * as AddressComponents from './Address';
 import * as MunicipalityComponents from './Municipality';
+import * as Controls from './Controls';
 import './Where.css';
 
-export const Summary = ({
+const ParseableDomain = new Parseable.Domain(Where.Domain);
+const asString = ParseableDomain.asString();
+
+export const Summary: Controls.Summary<Where.Value> = ({
   value,
-  client
-}: {
-  value?: Where,
-  client?: {
-    assign: (value_: Where) => void,
-    clear: () => void
-  }
+  client,
+  children
 }): JSX.Element => {
   if (!value?.name) {
-    return <span className="where-summary empty">Location not specified</span>;
+    return <React.Fragment>{children}</React.Fragment>;
   }
+
+  if(!asString) throw new Error('Expected Parseable.Domain to implement asString');
 
   return (
     <div className="where-summary" onClick={() => client?.assign(value)}>
       <span className="icon">📍</span>
-      <span className="name">{value.name}</span>
-      {(value.address || value.municipality) && 
-        <span className="details">
-          {value.address && <AddressComponents.Summary value={value.address} />}
-          {value.municipality && <MunicipalityComponents.Summary value={value.municipality} />}
-        </span>
-      }
+      {asString.to(value)}
     </div>
   );
 };
 
-export const Detail = ({
+export const Document: Controls.Document<Where.Value> = ({
   value,
   client
-}: {
-  value?: Where,
-  client?: {
-    assign: (value_: Where) => void,
-    clear: () => void
-  }
 }): JSX.Element => {
   if (!value && !client) {
     return <div className="where-detail empty">Location not specified</div>;
@@ -84,7 +73,7 @@ export const Detail = ({
 
       <div className="address-section">
         <h3><span className="icon">🏠</span> Address</h3>
-        <AddressComponents.Detail 
+        <AddressComponents.Document 
           value={value?.address}
           client={client && {
             assign: (address) => client.assign({ name:"", ...value, address }),
@@ -95,7 +84,7 @@ export const Detail = ({
 
       <div className="municipality-section">
         <h3><span className="icon">🌆</span> Municipality</h3>
-        <MunicipalityComponents.Detail
+        <MunicipalityComponents.Document
           value={value?.municipality}
           client={client && {
             assign: (municipality) => client.assign({ name:"", ...value, municipality }),
@@ -152,7 +141,7 @@ export const Detail = ({
               ) : (
                 <span className="value">
                   {value?.geo?.point && 
-                    `${value?.geo.point.lat.toFixed(6)}, ${value?.geo.point.lng.toFixed(6)}`
+                    `${value?.geo.point.lat?.toFixed(6)}, ${value?.geo.point.lng?.toFixed(6)}`
                   }
                 </span>
               )}

@@ -5,8 +5,8 @@
  * happen. 
  */
 import * as Introspection from 'typescript-introspection';
-import { Values } from '@pitaman71/omniglot-live-data';
-import { directory } from '.';
+import { Definitions, Values } from '@pitaman71/omniglot-live-data';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Address.${path}`;
 
@@ -20,5 +20,5 @@ export const Domain = new Values.AggregateDomain(makePath('Domain'), {
 }, ['addressLine1', 'addressLine2', 'postalCode']);
 
 directory.add(Domain);
-type ValueType = Introspection.getValueType<typeof Domain>;
-export default ValueType;
+export type Value = Introspection.getValueType<typeof Domain>;
+export default Value;

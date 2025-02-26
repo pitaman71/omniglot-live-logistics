@@ -9,20 +9,20 @@ import { Definitions, Values } from '@pitaman71/omniglot-live-data';
 import _Date, { Domain as DateDomain } from './Date';
 import _DateRange, { Domain as DateRangeDomain } from './DateRange';
 import _TimeRange, { Domain as TimeRangeDomain } from './TimeRange';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.TimeRange.${path}`;
 
 /**
  * A flexible representation of when an event may happen, is happening, or has happened.
  */
-export interface _When {
+export interface Value {
     at?: _Date,
     dates?: _DateRange,
     times?: _TimeRange
 }
 
-class _Domain extends Values.AggregateDomain<_When> {
+class _Domain extends Values.AggregateDomain<Value> {
     constructor(path: string) {
         super(path, {
             at: DateDomain,
@@ -30,7 +30,7 @@ class _Domain extends Values.AggregateDomain<_When> {
             times: TimeRangeDomain,
         }, ['at', 'dates', 'times'])
     }
-    expand(a: _When, b: Partial<_When>) {
+    expand(a: Value, b: Partial<Value>) {
         if(!a.dates?.from || !a.dates?.to) return b;
         if(!b.dates?.from || !b.dates?.to) return a;
         let from = DateDomain.cmp(b.dates.from, a.dates.from);
@@ -53,4 +53,4 @@ class _Domain extends Values.AggregateDomain<_When> {
 };
 export const Domain = new _Domain(makePath('Domain'));
 directory.add(Domain);
-export default _When;
+export default Value;

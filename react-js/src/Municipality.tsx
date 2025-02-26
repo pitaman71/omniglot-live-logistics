@@ -1,53 +1,41 @@
 import React from 'react';
-import Municipality from 'omniglot-live-media-models/lib/Municipality';
-import Place from 'omniglot-live-media-models/lib/Place';
-import './Municipality.css';
+import { Municipality, Parseable, Place } from 'omniglot-live-logistics-models';
+import * as Controls from './Controls';
+import './DateTime.css';
 
-type MunicipalityLevel = keyof Municipality;
+const ParseableDomain = new Parseable.Domain(Municipality.Domain);
+const asString = ParseableDomain.asString();
 
-export const Summary = ({
+type MunicipalityLevel = keyof Municipality.Value;
+
+export const Summary: Controls.Summary<Municipality.Value> = ({
   value,
-  client
-}: {
-  value?: Municipality,
-  client?: {
-    assign: (value_: Municipality) => void,
-    clear: () => void
-  }
+  client,
+  children
 }): JSX.Element => {
   if (!value?.city && !value?.state && !value?.country) {
-    return <span className="municipality-summary empty">No location</span>;
+    return <React.Fragment>{children}</React.Fragment>;
   }
 
-  const locationSummary = [
-    value.city?.shortName,
-    value.state?.shortName,
-    value.country?.shortName
-  ].filter(Boolean).join(', ');
+  if(!asString) throw new Error('Expected Parseable.Domain to implement asString');
 
   return (
     <div className="municipality-summary" onClick={() => client?.assign(value)}>
       <span className="icon">🌆</span>
-      <span className="content">{locationSummary}</span>
+      <span className="content">{asString.to(value)}</span>
     </div>
   );
 };
 
-export const Detail = ({
+export const Document: Controls.Document<Municipality.Value> = ({
   value,
   client
-}: {
-  value?: Municipality,
-  client?: {
-    assign: (value_: Municipality) => void,
-    clear: () => void
-  }
 }): JSX.Element => {
   if (!value && !client) {
     return <div className="municipality-detail empty">No location specified</div>;
   }
 
-  const updateLevel = (level: MunicipalityLevel, updates: Partial<Place>) => {
+  const updateLevel = (level: MunicipalityLevel, updates: Partial<Place.Value>) => {
     client?.assign({
       ...value,
       [level]: {

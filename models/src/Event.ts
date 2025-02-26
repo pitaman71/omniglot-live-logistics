@@ -5,11 +5,11 @@
  * happen. 
  */
 import * as Introspection from 'typescript-introspection';
-import { Values } from '@pitaman71/omniglot-live-data';
+import { Definitions, Values } from '@pitaman71/omniglot-live-data';
 import { Domain as WhenDomain } from './When';
 import { Domain as WhereDomain } from './Where';
 import { Domain as VicinityDomain } from './Vicinity';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Event.${path}`;
 
@@ -34,5 +34,5 @@ class _Domain extends Values.AggregateDomain<{
 export const Domain = new _Domain(makePath('Domain'));
 
 directory.add(Domain);
-type ValueType = Introspection.getValueType<typeof Domain>;
-export default ValueType;
+export type Value = Introspection.getValueType<typeof Domain>;
+export default Value;

@@ -8,11 +8,11 @@ import * as Introspection from 'typescript-introspection';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
 import _Meridian, { Domain as MeridianDomain} from './Meridian';
 import _Zone, { Domain as ZoneDomain } from './Zone';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Time.${path}`;
 
-export interface _Time {
+export interface Value {
     hour?: number;
     minute?: number;
     second?: number;
@@ -23,7 +23,7 @@ export interface _Time {
 /**
  * Time of day
  */
-class _Domain extends Values.AggregateDomain<_Time> {
+class _Domain extends Values.AggregateDomain<Value> {
     constructor(path: string) {
         super(path,{
             hour: new Values.RangeDomain(`${path}.hour`, 0, 23, 1),
@@ -35,11 +35,11 @@ class _Domain extends Values.AggregateDomain<_Time> {
     }
     asString() {
         return new class {
-            from(text: string): null|_Time { 
+            from(text: string, options?: { onError: (err: any) => void }): null|Value { 
                 let hour = 0;
                 let minute = 0;
                 let second: number|undefined;
-                let meridian: _Time['meridian']|undefined;
+                let meridian: Value['meridian']|undefined;
                 let zone: undefined|_Zone;
                 const parsed = text.match(/^(\d+):(\d+)(:(\d+))?\s*(am|pm)?\s+(.+)?/i)
                 if(parsed) {
@@ -51,12 +51,13 @@ class _Domain extends Values.AggregateDomain<_Time> {
                         zone = ZoneDomain.getByName(parsed[6])
                     }
                 } else {
-                    // error = `Parsing failed, expectd format HH:MM[:SS] [+|-]HH:MM [AM|PM]`
+                    if(options?.onError)
+                        options.onError(`Parsing failed, expectd format HH:MM[:SS] [+|-]HH:MM [AM|PM]`);
                     return null;
                 }
                 return { hour, minute, second, meridian, zone };
             }
-            to(value: _Time): string {
+            to(value: Value): string {
                 const hour = value.hour;
                 const minute = value.minute;
                 if(hour === undefined || minute === undefined) return '';
@@ -70,7 +71,7 @@ class _Domain extends Values.AggregateDomain<_Time> {
         };
     }
 
-    toSeconds(value: _Time) {
+    toSeconds(value: Value) {
         if(value.hour === undefined || value.minute === undefined)
             return undefined;
         let seconds = 0;
@@ -93,4 +94,4 @@ class _Domain extends Values.AggregateDomain<_Time> {
 }
 export const Domain = new _Domain(makePath('Domain'));
 directory.add(Domain);
-export default _Time;
+export default Value;

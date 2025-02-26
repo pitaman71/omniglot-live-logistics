@@ -1,101 +1,90 @@
 import React from 'react';
-import Address from 'omniglot-live-media-models/lib/Address';
+import { Address, Parseable } from 'omniglot-live-logistics-models';
+import * as Controls from './Controls';
 import './Address.css';
 
-export const Summary = ({
+const ParseableDomain = new Parseable.Domain(Address.Domain);
+const asString = ParseableDomain.asString();
+
+export const Summary: Controls.Summary<Address.Value> = ({
   value,
-  client
-}: {
-  value?: Address,
-  client?: {
-    assign: (value_: Address) => void,
-    clear: () => void
-  }
+  client,
+  children
 }): JSX.Element => {
-  if (!value?.addressLine1) {
-    return <span className="address-summary empty">No address</span>;
-  }
+    if (!value?.addressLine1) {
+        return <React.Fragment>{children}</React.Fragment>;
+    }
 
-  const addressSummary = [
-    value.addressLine1,
-    value.addressLine2,
-    value.postalCode
-  ].filter(Boolean).join(', ');
+    if(!asString) throw new Error('Expected Parseable.Domain to implement asString');
 
-  return (
-    <div className="address-summary" onClick={() => client?.assign(value)}>
-      <span className="icon">🏠</span>
-      <span className="content">{addressSummary}</span>
-    </div>
-  );
+    return (
+        <div className="address-summary">
+            <span className="icon">🏠</span>
+            <span className="content">{asString.to(value)}</span>
+        </div>
+    );
 };
 
-export const Detail = ({
+export const Document: Controls.Document<Address.Value> = ({
   value,
   client
-}: {
-  value?: Address,
-  client?: {
-    assign: (value_: Address) => void,
-    clear: () => void
-  }
 }): JSX.Element => {
-  if (!value && !client) {
-    return <div className="address-detail empty">No address specified</div>;
-  }
+    if (!value && !client) {
+        return <div className="address-detail empty">No address specified</div>;
+    }
 
-  return (
-    <div className="address-detail">
-      <div className="fields">
-        <div className="field-row">
-          <span className="label">Line 1:</span>
-          {client ? (
-            <input
-              type="text"
-              className="value-input"
-              value={value?.addressLine1 || ''}
-              onChange={(e) => client.assign({ ...value, addressLine1: e.target.value })}
-              placeholder="Street address"
-            />
-          ) : (
-            <span className="value">{value?.addressLine1}</span>
-          )}
-        </div>
-        <div className="field-row">
-          <span className="label">Line 2:</span>
-          {client ? (
-            <input
-              type="text"
-              className="value-input"
-              value={value?.addressLine2 || ''}
-              onChange={(e) => client.assign({ ...value, addressLine2: e.target.value })}
-              placeholder="Additional address info"
-            />
-          ) : (
-            <span className="value">{value?.addressLine2}</span>
-          )}
-        </div>
-        <div className="field-row">
-          <span className="label">Postal Code:</span>
-          {client ? (
-            <input
-              type="text"
-              className="value-input"
-              value={value?.postalCode || ''}
-              onChange={(e) => client.assign({ ...value, postalCode: e.target.value })}
-              placeholder="Postal code"
-            />
-          ) : (
-            <span className="value">{value?.postalCode}</span>
-          )}
-        </div>
-      </div>
-      
-      {client && (
-        <div className="actions">
-          <button onClick={() => client.clear()} className="clear-button">✖ Clear</button>
-        </div>
-      )}
-    </div>
-  );
-};
+    return (
+        <div className="address-detail">
+            <div className="fields">
+                <div className="field-row">
+                    <span className="label">Line 1:</span>
+                    {client ? (
+                        <input
+                            type="text"
+                            className="value-input"
+                            value={value?.addressLine1 || ''}
+                            onChange={(e) => client.assign({ ...value, addressLine1: e.target.value })}
+                            placeholder="Street address"
+                        />
+                    ) : (
+                        <span className="value">{value?.addressLine1}</span>
+                    )}
+                </div>
+                <div className="field-row">
+                <span className="label">Line 2:</span>
+                {client ? (
+                    <input
+                    type="text"
+                    className="value-input"
+                    value={value?.addressLine2 || ''}
+                    onChange={(e) => client.assign({ ...value, addressLine2: e.target.value })}
+                    placeholder="Additional address info"
+                    />
+                ) : (
+                    <span className="value">{value?.addressLine2}</span>
+                )}
+                </div>
+                <div className="field-row">
+                <span className="label">Postal Code:</span>
+                {client ? (
+                    <input
+                    type="text"
+                    className="value-input"
+                    value={value?.postalCode || ''}
+                    onChange={(e) => client.assign({ ...value, postalCode: e.target.value })}
+                    placeholder="Postal code"
+                    />
+                ) : (
+                    <span className="value">{value?.postalCode}</span>
+                )}
+                </div>
+                </div>
+                
+                {client && (
+                    <div className="actions">
+                    <button onClick={() => client.clear()} className="clear-button">✖ Clear</button>
+                    </div>
+                )}
+                </div>
+            );
+        };

@@ -6,11 +6,12 @@
  */
 import * as Luxon from 'luxon';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
+import { Error } from './Parseable';
 
 const makePath = (path: string) => `omniglot-live-logistics.Date.${path}`;
 
-export interface _Date {
+export interface Value {
     year?: number;
     month?: number;
     day?: number;
@@ -19,7 +20,7 @@ export interface _Date {
 /**
  * A calendar date
  */
-class _Domain extends Values.AggregateDomain<_Date> {
+class _Domain extends Values.AggregateDomain<Value> {
     constructor(path: string) {
         super(path, {
             year: new Values.RangeDomain(makePath('Domain.year'), 0, undefined, 1),
@@ -30,9 +31,10 @@ class _Domain extends Values.AggregateDomain<_Date> {
     asString(format?: string) { 
         const domain = this;
         return {
-            from(text: string): null|Partial<_Date> {
+            from(text: string, options?: { onError: (err: any) => void }): null|Partial<Value> {
                 const luxon = Luxon.DateTime.fromISO(text);
                 if(!luxon.isValid) {
+                    if(options?.onError) options.onError(luxon.invalidReason)
                     return null;
                 } else {
                     return {
@@ -42,20 +44,20 @@ class _Domain extends Values.AggregateDomain<_Date> {
                     }
                 }
             },
-            to(value: Partial<_Date>): string {
+            to(value: Partial<Value>): string {
                 return domain.asLuxon().to(value)?.toISODate() || '';
             }
         }
     }
     asLuxon() { return {
-            from(luxon: Luxon.DateTime): _Date|null { 
+            from(luxon: Luxon.DateTime): Value|null { 
                 return { 
                     year: luxon.year,
                     month: luxon.month,
                     day: luxon.day
                 } 
             },
-            to(value: _Date): Luxon.DateTime {
+            to(value: Value): Luxon.DateTime {
                 return Luxon.DateTime.fromObject({ year: value.year, month: value.month, day: value.day })
             }
         }
@@ -64,7 +66,7 @@ class _Domain extends Values.AggregateDomain<_Date> {
         const domain = this;
         return {
             from(date: globalThis.Date) { return domain.asLuxon().from(Luxon.DateTime.fromJSDate(date))},
-            to(value: _Date) { return domain.asLuxon().to(value)?.toJSDate() }
+            to(value: Value) { return domain.asLuxon().to(value)?.toJSDate() }
         }
     }
     fromBlank() { return {} }
@@ -72,4 +74,4 @@ class _Domain extends Values.AggregateDomain<_Date> {
 }
 export const Domain = new _Domain(makePath('Domain'));
 directory.add(Domain);
-export default _Date;
+export default Value;

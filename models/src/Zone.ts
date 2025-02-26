@@ -6,13 +6,13 @@
  */
 import * as Luxon from 'luxon';
 import * as tzdata from 'tzdata';
-import { Values } from '@pitaman71/omniglot-live-data';
+import { Definitions, Values } from '@pitaman71/omniglot-live-data';
 import cmp from './cmp';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Zone.${path}`;
 
-export interface _Zone {
+export interface Value {
     name?: string;
     short?: string;
     long?: string;
@@ -22,7 +22,7 @@ export interface _Zone {
 /**
  * A time zone
  */
-class _Domain extends Values.AggregateDomain<_Zone> {
+class _Domain extends Values.AggregateDomain<Value> {
     constructor(path: string) {
         super(path,{
             name: Values.TheStringDomain,
@@ -34,8 +34,8 @@ class _Domain extends Values.AggregateDomain<_Zone> {
     asString(format?: string) { 
         const domain = this;
         return {
-            from(text: string): Partial<_Zone> { return domain.getByName(text) },
-            to(value: Partial<_Zone>): string { return value.name || '' }
+            from(text: string): Partial<Value> { return domain.getByName(text) },
+            to(value: Partial<Value>): string { return value.name || '' }
         };
     }
     asEnumeration(maxCount: number) {
@@ -43,13 +43,13 @@ class _Domain extends Values.AggregateDomain<_Zone> {
         const luxons = tzNames.map(tzName => Luxon.DateTime.local({ zone: tzName }));
         const domain = this;
         return new class {
-            *forward(): Generator<_Zone> {
+            *forward(): Generator<Value> {
                 luxons.sort((a,b) => a.offset < b.offset ? -1 : a.offset > b.offset ? +1 : 0);
                 for(let luxon of luxons) {
                     yield domain.fromLuxon(luxon)
                 }
             }
-            *backward(): Generator<_Zone> {
+            *backward(): Generator<Value> {
                 luxons.sort((a,b) => a.offset > b.offset ? -1 : a.offset < b.offset ? +1 : 0);
                 for(let luxon of luxons) {
                     yield domain.fromLuxon(luxon)
@@ -57,7 +57,7 @@ class _Domain extends Values.AggregateDomain<_Zone> {
             }
         } 
     }
-    cmp(a: _Zone, b:_Zone): undefined|-1|0|1 {
+    cmp(a: Value, b:Value): undefined|-1|0|1 {
         let code = cmp(a.minutes, b.minutes);
         if(code !== 0) return code;
         code = cmp(a.name, b.name);
@@ -67,7 +67,7 @@ class _Domain extends Values.AggregateDomain<_Zone> {
     getLocal() {
         return this.fromLuxon(Luxon.DateTime.local());
     }
-    getByName(name: string): _Zone {
+    getByName(name: string): Value {
         const luxon = Luxon.DateTime.local({ zone: name });
         return {
             name: luxon.zoneName,
@@ -76,15 +76,15 @@ class _Domain extends Values.AggregateDomain<_Zone> {
             long: luxon.offsetNameLong
         }
     }
-    fromLuxon(luxon: Luxon.DateTime): _Zone {
+    fromLuxon(luxon: Luxon.DateTime): Value {
         return {
-            name: luxon.zoneName,
+            name: luxon.zoneName || undefined,
             minutes: luxon.offset,
-            short: luxon.offsetNameShort,
-            long: luxon.offsetNameLong
+            short: luxon.offsetNameShort || undefined,
+            long: luxon.offsetNameLong || undefined
         }
     }
 }
 export const Domain = new _Domain(makePath('Domain'));
 directory.add(Domain);
-export default _Zone;
+export default Value;

@@ -7,11 +7,11 @@
 import * as Luxon from 'luxon';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
 import cmp from './cmp';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Duration.${path}`;
 
-export interface _Duration {
+export interface Value {
     days?: number,
     hours?: number,
     minutes?: number,
@@ -21,7 +21,7 @@ export interface _Duration {
 /**
  * Measurement between two moments in time.
  */
-class _Domain extends Values.AggregateDomain<_Duration> {
+class _Domain extends Values.AggregateDomain<Value> {
     constructor(path: string) {
         super(path,{
             days: Values.TheNumberDomain,
@@ -31,7 +31,7 @@ class _Domain extends Values.AggregateDomain<_Duration> {
         })
     }
     asString(format?: string) { return new class {
-        from(text: string): null|_Duration {
+        from(text: string, options?: { onError: (err: any) => void }): null|Value {
             const parsed = text.match(/^((\d+)d)?((\d+)h)?((\d+)m)?((\d+)s)?/i);
             let days: number|undefined;
             let hours: number|undefined;
@@ -43,11 +43,13 @@ class _Domain extends Values.AggregateDomain<_Duration> {
                 minutes = Number.parseInt(parsed[6]);
                 seconds = Number.parseInt(parsed[8]);
             } else {
+                if(options?.onError)
+                    options.onError(`Expected format #d#h#m#s`)
                 return null;
             }
             return { days, hours, minutes, seconds };
         }
-        to(value: _Duration): string {
+        to(value: Value): string {
             return [
                 value.days === undefined ? '' : `${value.days.toString()}d`,
                 value.hours === undefined ? '' : `${value.hours.toString()}h`,
@@ -56,13 +58,13 @@ class _Domain extends Values.AggregateDomain<_Duration> {
             ].join('');
         }
     } }
-    cmp(a: _Duration, b:_Duration): undefined|-1|0|1 {
+    cmp(a: Value, b:Value): undefined|-1|0|1 {
         return cmp(this.toSeconds(a), this.toSeconds(b))
     }
-    toLuxon(duration: _Duration): Luxon.Duration {
+    toLuxon(duration: Value): Luxon.Duration {
         return Luxon.Duration.fromObject(duration);
     }
-    toSeconds(duration: _Duration): number {
+    toSeconds(duration: Value): number {
         return (duration.seconds || 0) +
             (duration.minutes ? 60 * duration.minutes : 0) +
             (duration.hours ? 3600 * duration.hours : 0) + 
@@ -80,4 +82,4 @@ class _Domain extends Values.AggregateDomain<_Duration> {
 }
 export const Domain = new _Domain(makePath('Domain'));
 directory.add(Domain);
-export default _Duration;
+export default Value;

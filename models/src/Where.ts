@@ -9,19 +9,19 @@ import { Definitions, Values } from '@pitaman71/omniglot-live-data';
 import { Domain as AddressDomain } from './Address';
 import { Domain as MunicipalityDomain } from './Municipality';
 import { Domain as GeoShapeDomain } from './GeoShape';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Where.${path}`;
 
-interface _Where {
-    name: string,
+export interface Value {
+    name?: string,
     googlePlaceId?: string,
     address?: Introspection.getValueType<typeof AddressDomain>,
     municipality?: Introspection.getValueType<typeof MunicipalityDomain>,
     geo?: Introspection.getValueType<typeof GeoShapeDomain>
 };
 
-class _Domain extends Values.AggregateDomain<_Where> {
+class _Domain extends Values.AggregateDomain<Value> {
     constructor(canonicalName: string) {
         super(canonicalName, {
             name: Values.TheStringDomain,
@@ -34,14 +34,14 @@ class _Domain extends Values.AggregateDomain<_Where> {
     asJSON() {
         const superAsJSON = () => super.asJSON();
         return {
-            from(json: Introspection.JSONValue, options?: { onError?: (error: Introspection.Error) => void }): Partial<_Where>|null {
+            from(json: Introspection.JSONValue, options?: { onError?: (error: Introspection.Error) => void }): Partial<Value>|null {
                 if(typeof json === 'string') {
                     return {
                         name: json
                     }
                 }
                 return superAsJSON().from(json, options);
-            }, to(value: Partial<_Where>): Introspection.JSONValue {
+            }, to(value: Partial<Value>): Introspection.JSONValue {
                 if(value === null) return null;
                 return superAsJSON().to(value);
             }
@@ -52,4 +52,4 @@ class _Domain extends Values.AggregateDomain<_Where> {
 export const Domain = new _Domain(makePath('Domain'));
 
 directory.add(Domain);
-export default _Where;
+export default Value;

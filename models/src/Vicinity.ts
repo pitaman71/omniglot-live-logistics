@@ -6,19 +6,19 @@
  */
 import * as Introspection from 'typescript-introspection';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
-import { directory } from '.';
+export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Vicinity.${path}`;
 
-export interface _Vicinity {
+export interface Value {
     sense: 'inside'|'outside';
     radius?: { miles: number }|{ kilometers: number };
 }
 
-class _Domain extends Introspection.Domain<_Vicinity> {
+class _Domain extends Introspection.Domain<Value> {
     asString(format?: string) { 
         return {
-            from(text: string): null|_Vicinity { 
+            from(text: string, options?: { onError: (err: any) => void }): null|Value { 
                 let sense:'inside'|'outside' = 'outside';
                 let radius: { miles: number }|{ kilometers: number }|undefined;
                 const match = text.match(/([+-]?)(\d+)\s*(\w+)/);
@@ -27,12 +27,13 @@ class _Domain extends Introspection.Domain<_Vicinity> {
                     if(match[3] == 'mi' || match[3] == 'miles') radius = { miles: parseInt(match[2]) };
                     if(match[3] == 'km' || match[3] == 'kilometers') radius = { kilometers: parseInt(match[2]) };
                 } else {
-                    //error = `Expected format: [+-]##[mi|km]`
+                    if(options?.onError)
+                        options.onError(`Expected format: [+-]##[mi|km]`);
                     return null;
                 }
                 return { sense, radius }
             },
-            to(value: _Vicinity) { 
+            to(value: Value) { 
                 if(value.radius === undefined) return "";
                 const { distance, abbrev } = 
                 'miles' in value.radius ? { distance: value.radius.miles, abbrev: 'mi' }
@@ -42,7 +43,7 @@ class _Domain extends Introspection.Domain<_Vicinity> {
         };
     }
     asEnumeration(maxCount: number) { return undefined }
-    cmp(a: _Vicinity, b: _Vicinity) {
+    cmp(a: Value, b: Value) {
         return undefined;
     }
 }
@@ -52,4 +53,4 @@ class _Domain extends Introspection.Domain<_Vicinity> {
 export const Domain = new _Domain(makePath('Domain'));
 
 directory.add(Domain);
-export default _Vicinity;
+export default Value;
