@@ -5,9 +5,9 @@
  * happen. 
  */
 import * as Luxon from 'luxon';
+import * as Introspection from 'typescript-introspection';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
 export const directory = new Definitions.Directory();
-import { Error } from './Parseable';
 
 const makePath = (path: string) => `omniglot-live-logistics.Date.${path}`;
 
@@ -46,6 +46,34 @@ class _Domain extends Values.AggregateDomain<Value> {
             },
             to(value: Partial<Value>): string {
                 return domain.asLuxon().to(value)?.toISODate() || '';
+            }
+        }
+    }
+    asISO() {
+        const domain = this;
+        return {
+            time() { return undefined },
+            dateTime()  { return undefined },
+            duration()  { return undefined },
+            interval()  { return undefined },
+            recurrence()  { return undefined },
+            date() {
+                return {
+                    from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                        if(isoString === null) return null;
+                        const luxon = Luxon.DateTime.fromISO(isoString);
+                        if(!luxon.isValid) {
+                            if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
+                            return null;
+                        }
+                        return domain.asLuxon().from(luxon);
+                    },
+                    to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                        if(value === null) return null;
+                        return domain.asLuxon().to(value)?.toISODate() || null;
+                    }
+                
+                }
             }
         }
     }

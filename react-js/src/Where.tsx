@@ -1,14 +1,13 @@
 import React from 'react';
-import { Where, Parseable } from 'omniglot-live-logistics-models';
+import * as Introspection from 'typescript-introspection';
+import { Where } from 'omniglot-live-logistics-models';
 import * as AddressComponents from './Address';
 import * as MunicipalityComponents from './Municipality';
 import * as Controls from './Controls';
 import './Where.css';
 
-const ParseableDomain = new Parseable.Domain(Where.Domain);
-const asString = ParseableDomain.asString();
-
 export const Summary: Controls.Summary<Where.Value> = ({
+  domain,
   value,
   client,
   children
@@ -17,7 +16,7 @@ export const Summary: Controls.Summary<Where.Value> = ({
     return <React.Fragment>{children}</React.Fragment>;
   }
 
-  if(!asString) throw new Error('Expected Parseable.Domain to implement asString');
+  const asString = domain?.asString() || Where.Domain.asString();
 
   return (
     <div className="where-summary" onClick={() => client?.assign(value)}>
@@ -104,16 +103,14 @@ export const Document: Controls.Document<Where.Value> = ({
                   <input
                     type="number"
                     className="value-input coordinate"
-                    value={value?.geo?.point?.lat || ''}
+                    value={value?.geo?.type === 'Point' && value?.geo?.lat || ''}
                     onChange={(e) => client.assign({
                       name:"", 
                       ...value,
                       geo: {
+                        type: 'Point',
                         ...value?.geo,
-                        point: {
-                          ...value?.geo?.point,
-                          lat: parseFloat(e.target.value)
-                        }
+                        lat: parseFloat(e.target.value)
                       }
                     })}
                     placeholder="Latitude"
@@ -122,16 +119,14 @@ export const Document: Controls.Document<Where.Value> = ({
                   <input
                     type="number"
                     className="value-input coordinate"
-                    value={value?.geo?.point?.lng || ''}
+                    value={value?.geo?.type === 'Point' && value?.geo?.lng || ''}
                     onChange={(e) => client.assign({
                       name:"", 
                       ...value,
                       geo: {
+                        type: 'Point',
                         ...value?.geo,
-                        point: {
-                          ...value?.geo?.point,
-                          lng: parseFloat(e.target.value)
-                        }
+                        lng: parseFloat(e.target.value)
                       }
                     })}
                     placeholder="Longitude"
@@ -140,8 +135,8 @@ export const Document: Controls.Document<Where.Value> = ({
                 </div>
               ) : (
                 <span className="value">
-                  {value?.geo?.point && 
-                    `${value?.geo.point.lat?.toFixed(6)}, ${value?.geo.point.lng?.toFixed(6)}`
+                  {value?.geo?.type === 'Point' && 
+                    `${value?.geo.lat?.toFixed(6)}, ${value?.geo.lng?.toFixed(6)}`
                   }
                 </span>
               )}

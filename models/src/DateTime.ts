@@ -5,6 +5,7 @@
  * happen. 
  */
 import * as Luxon from 'luxon';
+import * as Introspection from 'typescript-introspection';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
 import _Date, { Domain as DateDomain } from './Date';
 import _Time, { Domain as TimeDomain } from './Time';
@@ -30,14 +31,44 @@ class _Domain extends Values.AggregateDomain<Value> {
     asString(format?: string) {
         const domain = this;
         return new class {
-            from(text: string, options?: { onError: (err: any) => void }): null|Value {
+            from(text: string|null, options?: { onError: (err: any) => void }): null|Value {
+                if(text === null) return null;
                 return domain.fromISOString(text, options);
             }
-            to(value: Value) { 
+            to(value: Value|null) { 
+                if(value === null) return null;
                 return domain.asLuxon().to(value).toISO() || '';
             }
         }
     };
+
+    asISO() {
+        const domain = this;
+        return {
+            time() { return undefined },
+            dateTime()  { return undefined },
+            duration()  { return undefined },
+            interval()  { return undefined },
+            recurrence()  { return undefined },
+            date() {
+                return {
+                    from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                        if(isoString === null) return null;
+                        const luxon = Luxon.DateTime.fromISO(isoString);
+                        if(!luxon.isValid) {
+                            if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
+                            return null;
+                        }
+                        return domain.asLuxon().from(luxon);
+                    },
+                    to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                        if(value === null) return null;
+                        return domain.asLuxon().to(value)?.toISODate() || null;
+                    }                
+                }
+            }
+        }
+    }
 
     asLuxon() { 
         const domain = this;

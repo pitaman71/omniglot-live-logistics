@@ -14,9 +14,8 @@ const makePath = (path: string) => `omniglot-live-logistics.GeoShape.${path}`;
 /**
  * Shape on the surface of the globe as a single point or cloud of points.
  */
-export const Domain = new Values.AggregateDomain(makePath('Domain'), { 
-    point: GeoPointDomain,
-    cloud: new Values.ArrayDomain(makePath('Domain.cloud'), GeoPointDomain)
+export const Domain = new Values.UnionDomain(makePath(`ShapeDomain`), 'type', {
+    Point: GeoPointDomain
 });
 directory.add(Domain);
 export type Value = Introspection.getValueType<typeof Domain>;

@@ -13,7 +13,7 @@ __export(Address_exports2, {
 import React from "react";
 
 // ../models/src/index.ts
-import { Definitions as Definitions18 } from "@pitaman71/omniglot-live-data";
+import { Definitions as Definitions19 } from "@pitaman71/omniglot-live-data";
 
 // ../models/src/Address.ts
 var Address_exports = {};
@@ -2026,7 +2026,7 @@ function normalizeValues(matrix, vals) {
     }
   }, null);
 }
-var Duration = class _Duration {
+var Duration = class _Duration2 {
   /**
    * @private
    */
@@ -2049,7 +2049,7 @@ var Duration = class _Duration {
    * @return {Duration}
    */
   static fromMillis(count, opts) {
-    return _Duration.fromObject({ milliseconds: count }, opts);
+    return _Duration2.fromObject({ milliseconds: count }, opts);
   }
   /**
    * Create a Duration from a JavaScript object with keys like 'years' and 'hours'.
@@ -2076,8 +2076,8 @@ var Duration = class _Duration {
         `Duration.fromObject: argument expected to be an object, got ${obj === null ? "null" : typeof obj}`
       );
     }
-    return new _Duration({
-      values: normalizeObject(obj, _Duration.normalizeUnit),
+    return new _Duration2({
+      values: normalizeObject(obj, _Duration2.normalizeUnit),
       loc: Locale.fromObject(opts),
       conversionAccuracy: opts.conversionAccuracy
     });
@@ -2094,11 +2094,11 @@ var Duration = class _Duration {
    */
   static fromDurationLike(durationLike) {
     if (isNumber(durationLike)) {
-      return _Duration.fromMillis(durationLike);
-    } else if (_Duration.isDuration(durationLike)) {
+      return _Duration2.fromMillis(durationLike);
+    } else if (_Duration2.isDuration(durationLike)) {
       return durationLike;
     } else if (typeof durationLike === "object") {
-      return _Duration.fromObject(durationLike);
+      return _Duration2.fromObject(durationLike);
     } else {
       throw new InvalidArgumentError(
         `Unknown duration argument ${durationLike} of type ${typeof durationLike}`
@@ -2121,9 +2121,9 @@ var Duration = class _Duration {
   static fromISO(text, opts) {
     const [parsed] = parseISODuration(text);
     if (parsed) {
-      return _Duration.fromObject(parsed, opts);
+      return _Duration2.fromObject(parsed, opts);
     } else {
-      return _Duration.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
+      return _Duration2.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
     }
   }
   /**
@@ -2144,9 +2144,9 @@ var Duration = class _Duration {
   static fromISOTime(text, opts) {
     const [parsed] = parseISOTimeOnly(text);
     if (parsed) {
-      return _Duration.fromObject(parsed, opts);
+      return _Duration2.fromObject(parsed, opts);
     } else {
-      return _Duration.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
+      return _Duration2.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
     }
   }
   /**
@@ -2163,7 +2163,7 @@ var Duration = class _Duration {
     if (Settings.throwOnInvalid) {
       throw new InvalidDurationError(invalid);
     } else {
-      return new _Duration({ invalid });
+      return new _Duration2({ invalid });
     }
   }
   /**
@@ -2354,7 +2354,7 @@ var Duration = class _Duration {
    */
   plus(duration) {
     if (!this.isValid) return this;
-    const dur = _Duration.fromDurationLike(duration), result = {};
+    const dur = _Duration2.fromDurationLike(duration), result = {};
     for (const k of orderedUnits) {
       if (hasOwnProperty(dur.values, k) || hasOwnProperty(this.values, k)) {
         result[k] = dur.get(k) + this.get(k);
@@ -2369,7 +2369,7 @@ var Duration = class _Duration {
    */
   minus(duration) {
     if (!this.isValid) return this;
-    const dur = _Duration.fromDurationLike(duration);
+    const dur = _Duration2.fromDurationLike(duration);
     return this.plus(dur.negate());
   }
   /**
@@ -2396,7 +2396,7 @@ var Duration = class _Duration {
    * @return {number}
    */
   get(unit) {
-    return this[_Duration.normalizeUnit(unit)];
+    return this[_Duration2.normalizeUnit(unit)];
   }
   /**
    * "Set" the values of specified units. Return a newly-constructed Duration.
@@ -2407,7 +2407,7 @@ var Duration = class _Duration {
    */
   set(values) {
     if (!this.isValid) return this;
-    const mixed = { ...this.values, ...normalizeObject(values, _Duration.normalizeUnit) };
+    const mixed = { ...this.values, ...normalizeObject(values, _Duration2.normalizeUnit) };
     return clone(this, { values: mixed });
   }
   /**
@@ -2455,7 +2455,7 @@ var Duration = class _Duration {
     if (units.length === 0) {
       return this;
     }
-    units = units.map((u) => _Duration.normalizeUnit(u));
+    units = units.map((u) => _Duration2.normalizeUnit(u));
     const built = {}, accumulated = {}, vals = this.toObject();
     let lastUnit;
     for (const k of orderedUnits) {
@@ -4074,7 +4074,7 @@ function lastOpts(argList) {
   }
   return [opts, args];
 }
-var DateTime = class _DateTime {
+var DateTime = class _DateTime2 {
   /**
    * @access private
    */
@@ -4112,7 +4112,7 @@ var DateTime = class _DateTime {
    * @return {DateTime}
    */
   static now() {
-    return new _DateTime({});
+    return new _DateTime2({});
   }
   /**
    * Create a local DateTime
@@ -4178,13 +4178,13 @@ var DateTime = class _DateTime {
   static fromJSDate(date, options = {}) {
     const ts = isDate(date) ? date.valueOf() : NaN;
     if (Number.isNaN(ts)) {
-      return _DateTime.invalid("invalid input");
+      return _DateTime2.invalid("invalid input");
     }
     const zoneToUse = normalizeZone(options.zone, Settings.defaultZone);
     if (!zoneToUse.isValid) {
-      return _DateTime.invalid(unsupportedZone(zoneToUse));
+      return _DateTime2.invalid(unsupportedZone(zoneToUse));
     }
-    return new _DateTime({
+    return new _DateTime2({
       ts,
       zone: zoneToUse,
       loc: Locale.fromObject(options)
@@ -4206,9 +4206,9 @@ var DateTime = class _DateTime {
         `fromMillis requires a numerical input, but received a ${typeof milliseconds} with value ${milliseconds}`
       );
     } else if (milliseconds < -MAX_DATE || milliseconds > MAX_DATE) {
-      return _DateTime.invalid("Timestamp out of range");
+      return _DateTime2.invalid("Timestamp out of range");
     } else {
-      return new _DateTime({
+      return new _DateTime2({
         ts: milliseconds,
         zone: normalizeZone(options.zone, Settings.defaultZone),
         loc: Locale.fromObject(options)
@@ -4229,7 +4229,7 @@ var DateTime = class _DateTime {
     if (!isNumber(seconds)) {
       throw new InvalidArgumentError("fromSeconds requires a numerical input");
     } else {
-      return new _DateTime({
+      return new _DateTime2({
         ts: seconds * 1e3,
         zone: normalizeZone(options.zone, Settings.defaultZone),
         loc: Locale.fromObject(options)
@@ -4268,7 +4268,7 @@ var DateTime = class _DateTime {
     obj = obj || {};
     const zoneToUse = normalizeZone(opts.zone, Settings.defaultZone);
     if (!zoneToUse.isValid) {
-      return _DateTime.invalid(unsupportedZone(zoneToUse));
+      return _DateTime2.invalid(unsupportedZone(zoneToUse));
     }
     const tsNow = Settings.now(), offsetProvis = zoneToUse.offset(tsNow), normalized = normalizeObject(obj, normalizeUnit), containsOrdinal = !isUndefined(normalized.ordinal), containsGregorYear = !isUndefined(normalized.year), containsGregorMD = !isUndefined(normalized.month) || !isUndefined(normalized.day), containsGregor = containsGregorYear || containsGregorMD, definiteWeekDef = normalized.weekYear || normalized.weekNumber, loc = Locale.fromObject(opts);
     if ((containsGregor || containsOrdinal) && definiteWeekDef) {
@@ -4306,16 +4306,16 @@ var DateTime = class _DateTime {
     }
     const higherOrderInvalid = useWeekData ? hasInvalidWeekData(normalized) : containsOrdinal ? hasInvalidOrdinalData(normalized) : hasInvalidGregorianData(normalized), invalid = higherOrderInvalid || hasInvalidTimeData(normalized);
     if (invalid) {
-      return _DateTime.invalid(invalid);
+      return _DateTime2.invalid(invalid);
     }
-    const gregorian = useWeekData ? weekToGregorian(normalized) : containsOrdinal ? ordinalToGregorian(normalized) : normalized, [tsFinal, offsetFinal] = objToTS(gregorian, offsetProvis, zoneToUse), inst = new _DateTime({
+    const gregorian = useWeekData ? weekToGregorian(normalized) : containsOrdinal ? ordinalToGregorian(normalized) : normalized, [tsFinal, offsetFinal] = objToTS(gregorian, offsetProvis, zoneToUse), inst = new _DateTime2({
       ts: tsFinal,
       zone: zoneToUse,
       o: offsetFinal,
       loc
     });
     if (normalized.weekday && containsGregor && obj.weekday !== inst.weekday) {
-      return _DateTime.invalid(
+      return _DateTime2.invalid(
         "mismatched weekday",
         `you can't specify both a weekday of ${normalized.weekday} and a date of ${inst.toISO()}`
       );
@@ -4402,7 +4402,7 @@ var DateTime = class _DateTime {
       defaultToEN: true
     }), [vals, parsedZone, invalid] = parseFromTokens(localeToUse, text, fmt);
     if (invalid) {
-      return _DateTime.invalid(invalid);
+      return _DateTime2.invalid(invalid);
     } else {
       return parseDataToDateTime(vals, parsedZone, opts, `format ${fmt}`, text);
     }
@@ -4411,7 +4411,7 @@ var DateTime = class _DateTime {
    * @deprecated use fromFormat instead
    */
   static fromString(text, fmt, opts = {}) {
-    return _DateTime.fromFormat(text, fmt, opts);
+    return _DateTime2.fromFormat(text, fmt, opts);
   }
   /**
    * Create a DateTime from a SQL date, time, or datetime
@@ -4451,7 +4451,7 @@ var DateTime = class _DateTime {
     if (Settings.throwOnInvalid) {
       throw new InvalidDateTimeError(invalid);
     } else {
-      return new _DateTime({ invalid });
+      return new _DateTime2({ invalid });
     }
   }
   /**
@@ -4812,7 +4812,7 @@ var DateTime = class _DateTime {
     if (zone.equals(this.zone)) {
       return this;
     } else if (!zone.isValid) {
-      return _DateTime.invalid(unsupportedZone(zone));
+      return _DateTime2.invalid(unsupportedZone(zone));
     } else {
       let newTS = this.ts;
       if (keepLocalTime || keepCalendarTime) {
@@ -5252,7 +5252,7 @@ var DateTime = class _DateTime {
    * @return {Duration}
    */
   diffNow(unit = "milliseconds", opts = {}) {
-    return this.diff(_DateTime.now(), unit, opts);
+    return this.diff(_DateTime2.now(), unit, opts);
   }
   /**
    * Return an Interval spanning between this DateTime and another DateTime
@@ -5307,7 +5307,7 @@ var DateTime = class _DateTime {
    */
   toRelative(options = {}) {
     if (!this.isValid) return null;
-    const base = options.base || _DateTime.fromObject({}, { zone: this.zone }), padding = options.padding ? this < base ? -options.padding : options.padding : 0;
+    const base = options.base || _DateTime2.fromObject({}, { zone: this.zone }), padding = options.padding ? this < base ? -options.padding : options.padding : 0;
     let units = ["years", "months", "days", "hours", "minutes", "seconds"];
     let unit = options.unit;
     if (Array.isArray(options.unit)) {
@@ -5336,7 +5336,7 @@ var DateTime = class _DateTime {
    */
   toRelativeCalendar(options = {}) {
     if (!this.isValid) return null;
-    return diffRelative(options.base || _DateTime.fromObject({}, { zone: this.zone }), this, {
+    return diffRelative(options.base || _DateTime2.fromObject({}, { zone: this.zone }), this, {
       ...options,
       numeric: "auto",
       units: ["years", "months", "days"],
@@ -5349,7 +5349,7 @@ var DateTime = class _DateTime {
    * @return {DateTime} the min DateTime, or undefined if called with no argument
    */
   static min(...dateTimes) {
-    if (!dateTimes.every(_DateTime.isDateTime)) {
+    if (!dateTimes.every(_DateTime2.isDateTime)) {
       throw new InvalidArgumentError("min requires all arguments be DateTimes");
     }
     return bestBy(dateTimes, (i) => i.valueOf(), Math.min);
@@ -5360,7 +5360,7 @@ var DateTime = class _DateTime {
    * @return {DateTime} the max DateTime, or undefined if called with no argument
    */
   static max(...dateTimes) {
-    if (!dateTimes.every(_DateTime.isDateTime)) {
+    if (!dateTimes.every(_DateTime2.isDateTime)) {
       throw new InvalidArgumentError("max requires all arguments be DateTimes");
     }
     return bestBy(dateTimes, (i) => i.valueOf(), Math.max);
@@ -5385,7 +5385,7 @@ var DateTime = class _DateTime {
    * @deprecated use fromFormatExplain instead
    */
   static fromStringExplain(text, fmt, options = {}) {
-    return _DateTime.fromFormatExplain(text, fmt, options);
+    return _DateTime2.fromFormatExplain(text, fmt, options);
   }
   // FORMAT PRESETS
   /**
@@ -5590,6 +5590,43 @@ var _Domain = class extends Values2.AggregateDomain {
       }
     };
   }
+  asISO() {
+    const domain = this;
+    return {
+      time() {
+        return void 0;
+      },
+      dateTime() {
+        return void 0;
+      },
+      duration() {
+        return void 0;
+      },
+      interval() {
+        return void 0;
+      },
+      recurrence() {
+        return void 0;
+      },
+      date() {
+        return {
+          from(isoString, options) {
+            if (isoString === null) return null;
+            const luxon = DateTime.fromISO(isoString);
+            if (!luxon.isValid) {
+              if (options?.onError) options.onError({ kind: "syntaxError", tokenType: "ISO 8601 date string" });
+              return null;
+            }
+            return domain.asLuxon().from(luxon);
+          },
+          to(value, options) {
+            if (value === null) return null;
+            return domain.asLuxon().to(value)?.toISODate() || null;
+          }
+        };
+      }
+    };
+  }
   asLuxon() {
     return {
       from(luxon) {
@@ -5626,10 +5663,61 @@ directory2.add(Domain2);
 import { Definitions as Definitions3, Values as Values3 } from "@pitaman71/omniglot-live-data";
 var directory3 = new Definitions3.Directory();
 var makePath3 = (path) => `omniglot-live-logistics.DateRange.${path}`;
-var Domain3 = new Values3.AggregateDomain(makePath3("Domain"), {
-  from: Domain2,
-  to: Domain2
-});
+var Domain3 = new class _Domain2 extends Values3.AggregateDomain {
+  constructor() {
+    super(makePath3("Domain"), {
+      from: Domain2,
+      to: Domain2
+    });
+  }
+  asISO() {
+    const domain = this;
+    return {
+      date() {
+        return void 0;
+      },
+      dateTime() {
+        return void 0;
+      },
+      time() {
+        return void 0;
+      },
+      duration() {
+        return void 0;
+      },
+      recurrence() {
+        return void 0;
+      },
+      interval() {
+        return void 0;
+      },
+      dateRange() {
+        return {
+          from(isoString, options) {
+            if (isoString === null) return null;
+            const luxon = Interval.fromISO(isoString);
+            if (!luxon.isValid) {
+              if (options?.onError) options.onError({ kind: "syntaxError", tokenType: "ISO 8601 date string" });
+              return null;
+            }
+            return {
+              from: Domain2.asLuxon().from(luxon.start) || void 0,
+              to: Domain2.asLuxon().from(luxon.end) || void 0
+            };
+          },
+          to(value, options) {
+            if (value === null || value.from === void 0 || value.to === void 0) return null;
+            const luxon = Interval.fromDateTimes(
+              Domain2.asLuxon().to(value.from),
+              Domain2.asLuxon().to(value.to)
+            );
+            return luxon.toISO() || null;
+          }
+        };
+      }
+    };
+  }
+}();
 directory3.add(Domain3);
 
 // ../models/src/DateTime.ts
@@ -5655,27 +5743,10 @@ var zones = { "Africa/Algiers": [["-12.2", "-", "LMT", "-2486592000000"], ["-9.3
 
 // ../models/src/Zone.ts
 import { Definitions as Definitions5, Values as Values5 } from "@pitaman71/omniglot-live-data";
-
-// ../models/src/cmp.ts
-function cmp(a, b, comparator) {
-  if (a === void 0 || b === void 0) {
-    if (a === void 0 && b !== void 0) return -1;
-    if (a !== void 0 && b === void 0) return 1;
-    return 0;
-  }
-  if (a === null || b === null) {
-    if (a === null && b !== null) return -1;
-    if (a !== null && b === null) return 1;
-    return 0;
-  }
-  if (comparator) return comparator(a, b);
-  return a < b ? -1 : a > b ? 1 : 0;
-}
-
-// ../models/src/Zone.ts
+import * as Introspection from "typescript-introspection";
 var directory5 = new Definitions5.Directory();
 var makePath5 = (path) => `omniglot-live-logistics.Zone.${path}`;
-var _Domain2 = class extends Values5.AggregateDomain {
+var _Domain3 = class extends Values5.AggregateDomain {
   constructor(path) {
     super(path, {
       name: Values5.TheStringDomain,
@@ -5715,9 +5786,9 @@ var _Domain2 = class extends Values5.AggregateDomain {
     }();
   }
   cmp(a, b) {
-    let code = cmp(a.minutes, b.minutes);
+    let code = Introspection.Comparison.cmp(a.minutes, b.minutes);
     if (code !== 0) return code;
-    code = cmp(a.name, b.name);
+    code = Introspection.Comparison.cmp(a.name, b.name);
     return code;
   }
   getLocal() {
@@ -5741,13 +5812,13 @@ var _Domain2 = class extends Values5.AggregateDomain {
     };
   }
 };
-var Domain5 = new _Domain2(makePath5("Domain"));
+var Domain5 = new _Domain3(makePath5("Domain"));
 directory5.add(Domain5);
 
 // ../models/src/Time.ts
 var directory6 = new Definitions6.Directory();
 var makePath6 = (path) => `omniglot-live-logistics.Time.${path}`;
-var _Domain3 = class extends Values6.AggregateDomain {
+var _Domain4 = class extends Values6.AggregateDomain {
   constructor(path) {
     super(path, {
       hour: new Values6.RangeDomain(`${path}.hour`, 0, 23, 1),
@@ -5815,13 +5886,13 @@ var _Domain3 = class extends Values6.AggregateDomain {
     };
   }
 };
-var Domain6 = new _Domain3(makePath6("Domain"));
+var Domain6 = new _Domain4(makePath6("Domain"));
 directory6.add(Domain6);
 
 // ../models/src/DateTime.ts
 var directory7 = new Definitions7.Directory();
 var makePath7 = (path) => `omniglot-live-logistics.DateTime.${path}`;
-var _Domain4 = class extends Values7.AggregateDomain {
+var _Domain5 = class extends Values7.AggregateDomain {
   constructor(path) {
     super(path, {
       date: Domain2,
@@ -5832,12 +5903,51 @@ var _Domain4 = class extends Values7.AggregateDomain {
     const domain = this;
     return new class {
       from(text, options) {
+        if (text === null) return null;
         return domain.fromISOString(text, options);
       }
       to(value) {
+        if (value === null) return null;
         return domain.asLuxon().to(value).toISO() || "";
       }
     }();
+  }
+  asISO() {
+    const domain = this;
+    return {
+      time() {
+        return void 0;
+      },
+      dateTime() {
+        return void 0;
+      },
+      duration() {
+        return void 0;
+      },
+      interval() {
+        return void 0;
+      },
+      recurrence() {
+        return void 0;
+      },
+      date() {
+        return {
+          from(isoString, options) {
+            if (isoString === null) return null;
+            const luxon = DateTime.fromISO(isoString);
+            if (!luxon.isValid) {
+              if (options?.onError) options.onError({ kind: "syntaxError", tokenType: "ISO 8601 date string" });
+              return null;
+            }
+            return domain.asLuxon().from(luxon);
+          },
+          to(value, options) {
+            if (value === null) return null;
+            return domain.asLuxon().to(value)?.toISODate() || null;
+          }
+        };
+      }
+    };
   }
   asLuxon() {
     const domain = this;
@@ -5878,14 +5988,15 @@ var _Domain4 = class extends Values7.AggregateDomain {
     return this.asLuxon().from(DateTime.fromJSDate(date));
   }
 };
-var Domain7 = new _Domain4(makePath7("Domain"));
+var Domain7 = new _Domain5(makePath7("Domain"));
 directory7.add(Domain7);
 
 // ../models/src/Duration.ts
 import { Definitions as Definitions8, Values as Values8 } from "@pitaman71/omniglot-live-data";
+import * as Introspection2 from "typescript-introspection";
 var directory8 = new Definitions8.Directory();
 var makePath8 = (path) => `omniglot-live-logistics.Duration.${path}`;
-var _Domain5 = class extends Values8.AggregateDomain {
+var _Domain6 = class extends Values8.AggregateDomain {
   constructor(path) {
     super(path, {
       days: Values8.TheNumberDomain,
@@ -5924,8 +6035,51 @@ var _Domain5 = class extends Values8.AggregateDomain {
       }
     }();
   }
+  asISO() {
+    const domain = this;
+    return {
+      date() {
+        return void 0;
+      },
+      dateTime() {
+        return void 0;
+      },
+      time() {
+        return void 0;
+      },
+      interval() {
+        return void 0;
+      },
+      recurrence() {
+        return void 0;
+      },
+      duration() {
+        return {
+          from(isoString, options) {
+            if (isoString === null) return null;
+            const luxon = Duration.fromISO(isoString);
+            if (!luxon.isValid) {
+              if (options?.onError) options.onError({ kind: "syntaxError", tokenType: "ISO 8601 date string" });
+              return null;
+            }
+            return {
+              days: luxon.days,
+              hours: luxon.hours,
+              minute: luxon.minutes,
+              seconds: luxon.seconds
+            };
+          },
+          to(value, options) {
+            if (value === null) return null;
+            const luxon = Duration.fromObject(value);
+            return luxon.toISO() || null;
+          }
+        };
+      }
+    };
+  }
   cmp(a, b) {
-    return cmp(this.toSeconds(a), this.toSeconds(b));
+    return Introspection2.Comparison.cmp(this.toSeconds(a), this.toSeconds(b));
   }
   toLuxon(duration) {
     return Duration.fromObject(duration);
@@ -5942,7 +6096,7 @@ var _Domain5 = class extends Values8.AggregateDomain {
     };
   }
 };
-var Domain8 = new _Domain5(makePath8("Domain"));
+var Domain8 = new _Domain6(makePath8("Domain"));
 directory8.add(Domain8);
 
 // ../models/src/Event.ts
@@ -5964,7 +6118,7 @@ directory9.add(Domain9);
 // ../models/src/When.ts
 var directory10 = new Definitions10.Directory();
 var makePath10 = (path) => `omniglot-live-logistics.TimeRange.${path}`;
-var _Domain6 = class extends Values10.AggregateDomain {
+var _Domain7 = class extends Values10.AggregateDomain {
   constructor(path) {
     super(path, {
       at: Domain2,
@@ -5986,7 +6140,7 @@ var _Domain6 = class extends Values10.AggregateDomain {
     });
   }
 };
-var Domain10 = new _Domain6(makePath10("Domain"));
+var Domain10 = new _Domain7(makePath10("Domain"));
 directory10.add(Domain10);
 
 // ../models/src/Where.ts
@@ -6046,16 +6200,15 @@ directory13.add(Domain13);
 // ../models/src/GeoShape.ts
 var directory14 = new Definitions14.Directory();
 var makePath14 = (path) => `omniglot-live-logistics.GeoShape.${path}`;
-var Domain14 = new Values14.AggregateDomain(makePath14("Domain"), {
-  point: Domain13,
-  cloud: new Values14.ArrayDomain(makePath14("Domain.cloud"), Domain13)
+var Domain14 = new Values14.UnionDomain(makePath14(`ShapeDomain`), "type", {
+  Point: Domain13
 });
 directory14.add(Domain14);
 
 // ../models/src/Where.ts
 var directory15 = new Definitions15.Directory();
 var makePath15 = (path) => `omniglot-live-logistics.Where.${path}`;
-var _Domain7 = class extends Values15.AggregateDomain {
+var _Domain8 = class extends Values15.AggregateDomain {
   constructor(canonicalName) {
     super(canonicalName, {
       name: Values15.TheStringDomain,
@@ -6063,7 +6216,7 @@ var _Domain7 = class extends Values15.AggregateDomain {
       address: Domain,
       municipality: Domain12,
       geo: Domain14
-    }, ["googlePlaceId", "address", "geo"]);
+    }, ["googlePlaceId", "address", "municipality", "geo"]);
   }
   asJSON() {
     const superAsJSON = () => super.asJSON();
@@ -6083,15 +6236,15 @@ var _Domain7 = class extends Values15.AggregateDomain {
     };
   }
 };
-var Domain15 = new _Domain7(makePath15("Domain"));
+var Domain15 = new _Domain8(makePath15("Domain"));
 directory15.add(Domain15);
 
 // ../models/src/Vicinity.ts
-import * as Introspection from "typescript-introspection";
+import * as Introspection3 from "typescript-introspection";
 import { Definitions as Definitions16 } from "@pitaman71/omniglot-live-data";
 var directory16 = new Definitions16.Directory();
 var makePath16 = (path) => `omniglot-live-logistics.Vicinity.${path}`;
-var _Domain8 = class extends Introspection.Domain {
+var _Domain9 = class extends Introspection3.Domain {
   asString(format) {
     return {
       from(text, options) {
@@ -6123,13 +6276,13 @@ var _Domain8 = class extends Introspection.Domain {
     return void 0;
   }
 };
-var Domain17 = new _Domain8(makePath16("Domain"));
+var Domain17 = new _Domain9(makePath16("Domain"));
 directory16.add(Domain17);
 
 // ../models/src/Event.ts
 var directory17 = new Definitions17.Directory();
 var makePath17 = (path) => `omniglot-live-logistics.Event.${path}`;
-var _Domain9 = class extends Values17.AggregateDomain {
+var _Domain10 = class extends Values17.AggregateDomain {
   constructor(canonicalName) {
     super(canonicalName, {
       where: Domain15,
@@ -6138,56 +6291,142 @@ var _Domain9 = class extends Values17.AggregateDomain {
     });
   }
 };
-var Domain18 = new _Domain9(makePath17("Domain"));
+var Domain18 = new _Domain10(makePath17("Domain"));
 directory17.add(Domain18);
 
-// ../models/src/Parseable.ts
-var Parseable_exports = {};
-__export(Parseable_exports, {
-  Domain: () => Domain20
-});
-import * as Introspection2 from "typescript-introspection";
-var Domain20 = class extends Introspection2.Domain {
-  constructor(domain) {
-    super(`Parseable<${domain.canonicalName}>`);
-    this.domain = domain;
+// ../models/src/Interval.ts
+import * as Introspection4 from "typescript-introspection";
+import { Definitions as Definitions18, Values as Values18 } from "@pitaman71/omniglot-live-data";
+var directory18 = new Definitions18.Directory();
+var makePath18 = (path) => `omniglot-live-logistics.Interval.${path}`;
+var Domain19 = new class _Domain11 extends Values18.AggregateDomain {
+  constructor() {
+    super(makePath18(`IntervalDomain`), {
+      start: Domain7,
+      end: Domain7,
+      duration: Domain8
+    });
   }
-  asString() {
-    const tAsString = this.domain.asString();
-    if (!tAsString) return void 0;
+  asString(format) {
+    const domain = this;
     return {
-      to(val) {
-        if (val.text !== void 0) return val.text;
-        return tAsString.to(val);
-      },
       from(text) {
-        const errors = [];
-        const parsed = tAsString.from(text, { onError: (err) => errors.push(err) });
+        let luxon;
+        luxon = Interval.fromISO(text);
+        if (!luxon.isValid) {
+          return null;
+        }
+        const start = luxon.start && Domain7.asLuxon().from(luxon.start) || void 0;
+        const end = luxon.end && Domain7.asLuxon().from(luxon.end) || void 0;
+        if (!start || !end) return null;
+        return domain.from(start, end);
+      },
+      to(value) {
+        const luxon = domain.asLuxon().to(value);
+        if (!luxon) return "";
+        return luxon.toISO();
+      }
+    };
+  }
+  asISO() {
+    const domain = this;
+    return {
+      date() {
+        return void 0;
+      },
+      dateTime() {
+        return void 0;
+      },
+      time() {
+        return void 0;
+      },
+      duration() {
+        return void 0;
+      },
+      recurrence() {
+        return void 0;
+      },
+      interval() {
         return {
-          text,
-          errors: errors.length === 0 ? void 0 : errors,
-          ...parsed
+          from(isoString, options) {
+            if (isoString === null) return null;
+            const luxon = Interval.fromISO(isoString);
+            if (!luxon.isValid) {
+              if (options?.onError) options.onError({ kind: "syntaxError", tokenType: "ISO 8601 date string" });
+              return null;
+            }
+            return {
+              start: Domain7.asLuxon().from(luxon.start) || void 0,
+              end: Domain7.asLuxon().from(luxon.end) || void 0
+            };
+          },
+          to(value, options) {
+            if (value === null || value.start === void 0 || value.end === void 0) return null;
+            const luxon = Interval.fromDateTimes(
+              Domain7.asLuxon().to(value.start),
+              Domain7.asLuxon().to(value.end)
+            );
+            return luxon.toISO() || null;
+          }
         };
       }
     };
   }
-  cmp(a, b) {
-    const tCmp = this.domain.cmp;
-    if (!tCmp) return void 0;
-    const code = tCmp(a, b);
-    if (code !== 0) return code;
-    return cmp(a.text, b.text);
+  asEnumeration(maxCount) {
+    return void 0;
   }
-};
+  cmp(a, b) {
+    let code = Introspection4.Comparison.cmp(a?.start, b?.start, Domain7.cmp);
+    if (code != 0) return code;
+    code = Introspection4.Comparison.cmp(a?.end, b?.end, Domain7.cmp);
+    return code;
+  }
+  from(start, end, duration) {
+    let text;
+    let luxon;
+    if (!start) {
+    } else if (!end && !!duration) {
+      end = Domain7.asLuxon().from(Domain7.asLuxon().to(start)?.plus(Domain8.toLuxon(duration))) || void 0;
+    } else if (!!end && !duration) {
+      const s2 = Domain7.asLuxon().to(start);
+      const e = Domain7.asLuxon().to(end);
+      duration = s2 && e ? e.diff(s2) : void 0;
+    }
+    return {
+      start: start || void 0,
+      duration: duration || void 0,
+      end: end || void 0
+    };
+  }
+  asLuxon() {
+    const domain = this;
+    return {
+      from(luxon) {
+        const start = luxon.start ? Domain7.asLuxon().from(luxon.start) : void 0;
+        const end = luxon.end ? Domain7.asLuxon().from(luxon.end) : void 0;
+        return { start, end };
+      },
+      to(value) {
+        if (!value.start || !value.end) return null;
+        return Interval.fromDateTimes(
+          Domain7.asLuxon().to(value.start),
+          Domain7.asLuxon().to(value.end)
+        );
+      }
+    };
+  }
+}();
+directory18.add(Domain19);
 
 // ../models/src/index.ts
-var directory18 = Definitions18.Directory.from(
+var directory19 = Definitions19.Directory.from(
   directory,
   directory2,
   directory3,
   directory7,
   directory8,
   directory17,
+  directory18,
   directory13,
   directory14,
   directory4,
@@ -6203,9 +6442,8 @@ var directory18 = Definitions18.Directory.from(
 
 // src/Address.tsx
 import { jsx, jsxs } from "react/jsx-runtime";
-var ParseableDomain = new Parseable_exports.Domain(Address_exports.Domain);
-var asString = ParseableDomain.asString();
 var Summary = ({
+  domain,
   value,
   client,
   children
@@ -6213,19 +6451,21 @@ var Summary = ({
   if (!value?.addressLine1) {
     return /* @__PURE__ */ jsx(React.Fragment, { children });
   }
-  if (!asString) throw new Error("Expected Parseable.Domain to implement asString");
+  const asString = domain?.asString() || Address_exports.Domain.asString();
   return /* @__PURE__ */ jsxs("div", { className: "address-summary", children: [
     /* @__PURE__ */ jsx("span", { className: "icon", children: "\u{1F3E0}" }),
     /* @__PURE__ */ jsx("span", { className: "content", children: asString.to(value) })
   ] });
 };
 var Document = ({
+  domain,
   value,
   client
 }) => {
   if (!value && !client) {
     return /* @__PURE__ */ jsx("div", { className: "address-detail empty", children: "No address specified" });
   }
+  const asString = domain?.asString() || Address_exports.Domain.asString();
   return /* @__PURE__ */ jsxs("div", { className: "address-detail", children: [
     /* @__PURE__ */ jsxs("div", { className: "fields", children: [
       /* @__PURE__ */ jsxs("div", { className: "field-row", children: [
@@ -6280,9 +6520,8 @@ __export(DateTime_exports2, {
 });
 import React2 from "react";
 import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
-var ParseableDomain2 = new Parseable_exports.Domain(DateTime_exports.Domain);
-var asString2 = ParseableDomain2.asString();
 var Summary2 = ({
+  domain,
   value,
   client,
   children
@@ -6290,8 +6529,8 @@ var Summary2 = ({
   if (!value?.date && !value?.time) {
     return /* @__PURE__ */ jsx2(React2.Fragment, { children });
   }
-  if (!asString2) throw new Error("Expected Parseable.Domain to implement asString");
-  return /* @__PURE__ */ jsx2("div", { className: "datetime-preview", children: asString2.to(value) });
+  const asString = domain?.asString() || DateTime_exports.Domain.asString();
+  return /* @__PURE__ */ jsx2("div", { className: "datetime-preview", children: asString.to(value) });
 };
 var Document2 = ({
   value,
@@ -6361,20 +6600,20 @@ __export(Municipality_exports2, {
 });
 import React3 from "react";
 import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
-var ParseableDomain3 = new Parseable_exports.Domain(Municipality_exports.Domain);
-var asString3 = ParseableDomain3.asString();
 var Summary3 = ({
+  domain,
   value,
   client,
   children
 }) => {
-  if (!value?.city && !value?.state && !value?.country) {
+  const asString = domain?.asString() || Municipality_exports.Domain.asString();
+  if (!value) {
     return /* @__PURE__ */ jsx3(React3.Fragment, { children });
   }
-  if (!asString3) throw new Error("Expected Parseable.Domain to implement asString");
+  if (!asString) throw new Error("Expected Introspection.Parsing.Domain to implement asString");
   return /* @__PURE__ */ jsxs3("div", { className: "municipality-summary", onClick: () => client?.assign(value), children: [
     /* @__PURE__ */ jsx3("span", { className: "icon", children: "\u{1F306}" }),
-    /* @__PURE__ */ jsx3("span", { className: "content", children: asString3.to(value) })
+    /* @__PURE__ */ jsx3("span", { className: "content", children: asString.to(value) })
   ] });
 };
 var Document3 = ({
@@ -6425,7 +6664,7 @@ var Document3 = ({
             className: "value-input iso",
             value: value?.[level]?.iso?.code || "",
             onChange: (e) => updateLevel(level, {
-              iso: { ...value?.[level]?.iso, code: e.target.value }
+              iso: { standard: "iso", ...value?.[level]?.iso, code: e.target.value }
             }),
             placeholder: "ISO code"
           }
@@ -6451,9 +6690,8 @@ __export(Where_exports2, {
 });
 import React4 from "react";
 import { jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
-var ParseableDomain4 = new Parseable_exports.Domain(Where_exports.Domain);
-var asString4 = ParseableDomain4.asString();
 var Summary4 = ({
+  domain,
   value,
   client,
   children
@@ -6461,10 +6699,10 @@ var Summary4 = ({
   if (!value?.name) {
     return /* @__PURE__ */ jsx4(React4.Fragment, { children });
   }
-  if (!asString4) throw new Error("Expected Parseable.Domain to implement asString");
+  const asString = domain?.asString() || Where_exports.Domain.asString();
   return /* @__PURE__ */ jsxs4("div", { className: "where-summary", onClick: () => client?.assign(value), children: [
     /* @__PURE__ */ jsx4("span", { className: "icon", children: "\u{1F4CD}" }),
-    asString4.to(value)
+    asString.to(value)
   ] });
 };
 var Document4 = ({
@@ -6554,16 +6792,14 @@ var Document4 = ({
             {
               type: "number",
               className: "value-input coordinate",
-              value: value?.geo?.point?.lat || "",
+              value: value?.geo?.type === "Point" && value?.geo?.lat || "",
               onChange: (e) => client.assign({
                 name: "",
                 ...value,
                 geo: {
+                  type: "Point",
                   ...value?.geo,
-                  point: {
-                    ...value?.geo?.point,
-                    lat: parseFloat(e.target.value)
-                  }
+                  lat: parseFloat(e.target.value)
                 }
               }),
               placeholder: "Latitude",
@@ -6575,23 +6811,21 @@ var Document4 = ({
             {
               type: "number",
               className: "value-input coordinate",
-              value: value?.geo?.point?.lng || "",
+              value: value?.geo?.type === "Point" && value?.geo?.lng || "",
               onChange: (e) => client.assign({
                 name: "",
                 ...value,
                 geo: {
+                  type: "Point",
                   ...value?.geo,
-                  point: {
-                    ...value?.geo?.point,
-                    lng: parseFloat(e.target.value)
-                  }
+                  lng: parseFloat(e.target.value)
                 }
               }),
               placeholder: "Longitude",
               step: "0.000001"
             }
           )
-        ] }) : /* @__PURE__ */ jsx4("span", { className: "value", children: value?.geo?.point && `${value?.geo.point.lat?.toFixed(6)}, ${value?.geo.point.lng?.toFixed(6)}` })
+        ] }) : /* @__PURE__ */ jsx4("span", { className: "value", children: value?.geo?.type === "Point" && `${value?.geo.lat?.toFixed(6)}, ${value?.geo.lng?.toFixed(6)}` })
       ] }) })
     ] }),
     client && /* @__PURE__ */ jsx4("div", { className: "actions", children: /* @__PURE__ */ jsx4("button", { onClick: () => client.clear(), className: "clear-button", children: "\u2716 Clear" }) })

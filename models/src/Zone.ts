@@ -7,7 +7,7 @@
 import * as Luxon from 'luxon';
 import * as tzdata from 'tzdata';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
-import cmp from './cmp';
+import * as Introspection from 'typescript-introspection';
 export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Zone.${path}`;
@@ -58,9 +58,9 @@ class _Domain extends Values.AggregateDomain<Value> {
         } 
     }
     cmp(a: Value, b:Value): undefined|-1|0|1 {
-        let code = cmp(a.minutes, b.minutes);
+        let code = Introspection.Comparison.cmp(a.minutes, b.minutes);
         if(code !== 0) return code;
-        code = cmp(a.name, b.name);
+        code = Introspection.Comparison.cmp(a.name, b.name);
         return code;
     }
 

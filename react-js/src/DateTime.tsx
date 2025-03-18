@@ -1,12 +1,11 @@
 import React from 'react';
-import { DateTime, Parseable } from 'omniglot-live-logistics-models';
+import * as Introspection from 'typescript-introspection';
+import { DateTime } from 'omniglot-live-logistics-models';
 import * as Controls from './Controls';
 import './DateTime.css';
 
-const ParseableDomain = new Parseable.Domain(DateTime.Domain);
-const asString = ParseableDomain.asString();
-
 export const Summary: Controls.Summary<DateTime.Value> = ({ 
+    domain,
     value, 
     client,
     children
@@ -14,9 +13,9 @@ export const Summary: Controls.Summary<DateTime.Value> = ({
     if (!value?.date && !value?.time) {
         return <React.Fragment>{children}</React.Fragment>;
     }
-    
-    if(!asString) throw new Error('Expected Parseable.Domain to implement asString');
-    
+
+    const asString = domain?.asString() || DateTime.Domain.asString();
+
     return (
         <div className="datetime-preview">
             {asString.to(value)}

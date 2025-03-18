@@ -9,9 +9,9 @@ import * as Duration from './Duration';
 import * as Event from './Event';
 import * as GeoPoint from './GeoPoint';
 import * as GeoShape from './GeoShape';
+import * as Interval from './Interval';
 import * as Meridian from './Meridian';
 import * as Municipality from './Municipality';
-import * as Parseable from './Parseable';
 import * as Place from './Place';
 import * as Time from './Time';
 import * as TimeRange from './TimeRange';
@@ -22,14 +22,14 @@ import * as Zone from './Zone';
 
 export const directory = Definitions.Directory.from(
     Address.directory, Date.directory, DateRange.directory, DateTime.directory, 
-    Duration.directory, Event.directory, GeoPoint.directory, GeoShape.directory,
+    Duration.directory, Event.directory, Interval.directory, GeoPoint.directory, GeoShape.directory,
     Meridian.directory, Municipality.directory, Place.directory,
     Time.directory, TimeRange.directory, Vicinity.directory,
     When.directory, Where.directory, Zone.directory);
 
 export { Address, Date, DateRange, DateTime, 
-    Duration, Event, GeoPoint, GeoShape,
-    Meridian, Municipality, Parseable, Place,
+    Duration, Event, Interval, GeoPoint, GeoShape,
+    Meridian, Municipality, Place,
     Time, TimeRange, Vicinity,
     When, Where, Zone
 };

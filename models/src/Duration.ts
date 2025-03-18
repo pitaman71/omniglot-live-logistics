@@ -6,7 +6,7 @@
  */
 import * as Luxon from 'luxon';
 import { Definitions, Values } from '@pitaman71/omniglot-live-data';
-import cmp from './cmp';
+import * as Introspection from 'typescript-introspection';
 export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Duration.${path}`;
@@ -58,8 +58,42 @@ class _Domain extends Values.AggregateDomain<Value> {
             ].join('');
         }
     } }
+    asISO() {
+        const domain = this;
+        return {
+            date() { return undefined },
+            dateTime()  { return undefined },
+            time()  { return undefined },
+            interval()  { return undefined },
+            recurrence()  { return undefined },
+            duration() {
+                return {
+                    from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                        if(isoString === null) return null;
+                        const luxon = Luxon.Duration.fromISO(isoString);
+                        if(!luxon.isValid) {
+                            if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
+                            return null;
+                        }
+                        return {
+                            days: luxon.days,
+                            hours: luxon.hours,
+                            minute: luxon.minutes,
+                            seconds: luxon.seconds
+                        }
+                    },
+                    to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                        if(value === null) return null;
+                        const luxon = Luxon.Duration.fromObject(value);
+                        return luxon.toISO() || null;
+                    }
+                
+                }
+            }
+        }
+    }
     cmp(a: Value, b:Value): undefined|-1|0|1 {
-        return cmp(this.toSeconds(a), this.toSeconds(b))
+        return Introspection.Comparison.cmp(this.toSeconds(a), this.toSeconds(b))
     }
     toLuxon(duration: Value): Luxon.Duration {
         return Luxon.Duration.fromObject(duration);

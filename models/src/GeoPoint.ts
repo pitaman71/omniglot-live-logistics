@@ -18,6 +18,24 @@ export const Domain = new Values.AggregateDomain(makePath('Domain'), {
     lng: Values.TheNumberDomain
 });
 
+const PositionTranscoder: Introspection.Transcoder<GeoJSON.Position, Value> = {
+    from: (x: null|GeoJSON.Position) => (!x ? null : { lat: x[0], lng: x[1] }),
+    to: x => (!x ? null : [x.lat, x.lng])
+};
+
+const PositionArrayTranscoder: Introspection.Transcoder<GeoJSON.Position[], Value[]> = {
+    from: x => (!x ? null : x.reduce<Value[]>(( points, position) => {
+        const y: Value|null = PositionTranscoder.from(position);
+        if(y === null) return points;
+        return [...points, y];
+    }, [])),
+    to: x => (!x ? null : x.reduce<GeoJSON.Position[]>(( positions, point) => {
+        const y: GeoJSON.Position|null = PositionTranscoder.to(point);
+        if(y === null) return positions;
+        return [...positions, y];
+    }, [] ))
+};
+
 directory.add(Domain);
 export type Value = Introspection.getValueType<typeof Domain>;
 export default Value;

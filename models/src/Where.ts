@@ -14,7 +14,7 @@ export const directory = new Definitions.Directory();
 const makePath = (path: string) => `omniglot-live-logistics.Where.${path}`;
 
 export interface Value {
-    name?: string,
+    name: string,
     googlePlaceId?: string,
     address?: Introspection.getValueType<typeof AddressDomain>,
     municipality?: Introspection.getValueType<typeof MunicipalityDomain>,
@@ -29,19 +29,19 @@ class _Domain extends Values.AggregateDomain<Value> {
             address: AddressDomain,
             municipality: MunicipalityDomain,
             geo: GeoShapeDomain
-        }, ['googlePlaceId', 'address', 'geo'])
+        }, ['googlePlaceId', 'address', 'municipality', 'geo'])
     }
     asJSON() {
         const superAsJSON = () => super.asJSON();
         return {
-            from(json: Introspection.JSONValue, options?: { onError?: (error: Introspection.Error) => void }): Partial<Value>|null {
+            from(json: Introspection.JSONValue, options?: { onError?: (error: Introspection.Parsing.Error) => void }): Value|null {
                 if(typeof json === 'string') {
                     return {
                         name: json
                     }
                 }
                 return superAsJSON().from(json, options);
-            }, to(value: Partial<Value>): Introspection.JSONValue {
+            }, to(value: Value|null): Introspection.JSONValue {
                 if(value === null) return null;
                 return superAsJSON().to(value);
             }

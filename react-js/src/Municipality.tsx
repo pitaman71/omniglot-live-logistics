@@ -1,30 +1,30 @@
 import React from 'react';
-import { Municipality, Parseable, Place } from 'omniglot-live-logistics-models';
+import * as Introspection from 'typescript-introspection';
+import { Municipality, Place } from 'omniglot-live-logistics-models';
 import * as Controls from './Controls';
 import './DateTime.css';
-
-const ParseableDomain = new Parseable.Domain(Municipality.Domain);
-const asString = ParseableDomain.asString();
 
 type MunicipalityLevel = keyof Municipality.Value;
 
 export const Summary: Controls.Summary<Municipality.Value> = ({
+  domain,
   value,
   client,
   children
 }): JSX.Element => {
-  if (!value?.city && !value?.state && !value?.country) {
-    return <React.Fragment>{children}</React.Fragment>;
-  }
-
-  if(!asString) throw new Error('Expected Parseable.Domain to implement asString');
-
-  return (
-    <div className="municipality-summary" onClick={() => client?.assign(value)}>
+    const asString = domain?.asString() || Municipality.Domain.asString();
+    if (!value) {
+      return <React.Fragment>{children}</React.Fragment>;
+    }
+    
+    if(!asString) throw new Error('Expected Introspection.Parsing.Domain to implement asString');
+    
+    return (
+      <div className="municipality-summary" onClick={() => client?.assign(value)}>
       <span className="icon">🌆</span>
       <span className="content">{asString.to(value)}</span>
-    </div>
-  );
+      </div>
+    );
 };
 
 export const Document: Controls.Document<Municipality.Value> = ({
@@ -74,7 +74,7 @@ export const Document: Controls.Document<Municipality.Value> = ({
                     className="value-input iso"
                     value={value?.[level]?.iso?.code || ''}
                     onChange={(e) => updateLevel(level, { 
-                      iso: { ...value?.[level]?.iso, code: e.target.value }
+                      iso: { standard: 'iso', ...value?.[level]?.iso, code: e.target.value }
                     })}
                     placeholder="ISO code"
                   />

@@ -1,17 +1,15 @@
 import React from 'react';
-import { Date, Parseable } from 'omniglot-live-logistics-models';
+import * as Introspection from 'typescript-introspection';
+import { Date } from 'omniglot-live-logistics-models';
 import * as Controls from './Controls';
 import './Date.css';
 
-const ParseableDomain = new Parseable.Domain(Date.Domain);
-const asString = ParseableDomain.asString();
-
-export const Summary: Controls.Summary<Date.Value> = ({ value, client, children}): JSX.Element => {
-    if (!value?.year || !value?.month || !value?.day) {
+export const Summary: Controls.Summary<Date.Value> = ({ domain, value, client, children }): JSX.Element => {
+    if (!value) {
       return <React.Fragment>{children}</React.Fragment>;
     }
 
-    if(!asString) throw new Error('Expected Parseable.Domain to implement asString');
+    const asString = domain?.asString() || Date.Domain.asString();
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const parsed = asString.from(e.target.value);
@@ -23,7 +21,7 @@ export const Summary: Controls.Summary<Date.Value> = ({ value, client, children}
         return (<input
             type="date"
             className="date-summary editable"
-            value={asString.to(value)}
+            value={asString.to(value)||undefined}
             onChange={handleDateChange}
         />);
     }
