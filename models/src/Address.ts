@@ -10,7 +10,7 @@ export const directory = new Definitions.Directory();
 
 const makePath = (path: string) => `omniglot-live-logistics.Address.${path}`;
 
-export interface Value {
+interface _Address {
     addressLine1?: string;
     addressLine2?: string;
     postalCode?: string;
@@ -18,11 +18,12 @@ export interface Value {
 /**
  * Physical address of a place in pseudo-international format.
  */
-export const Domain = new Values.AggregateDomain<Value>(makePath('Domain'), { 
+export const Domain = new Values.AggregateDomain<_Address>(makePath('Domain'), { 
     addressLine1: Values.TheStringDomain,
     addressLine2: Values.TheStringDomain,
     postalCode: Values.TheStringDomain
 }, ['addressLine1', 'addressLine2', 'postalCode']);
 
 directory.add(Domain);
-export default Value;
+export type Value = _Address;
+

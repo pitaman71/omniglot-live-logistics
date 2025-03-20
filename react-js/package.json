@@ -1,6 +1,6 @@
 {
   "name": "@pitaman71/omniglot-live-logistics-reactjs",
-  "version": "0.6.58",
+  "version": "0.6.68",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -52,7 +52,8 @@
     "omniglot-live-logistics-models": "file:../models"
   },
   "peerDependencies": {
-    "@pitaman71/omniglot-live-data": "^0.6.57",
+    "@pitaman71/omniglot-live-data": "^0.6.66",
+    "@pitaman71/omniglot-live-reactjs": "^0.6.68",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
     "react-error-boundary": "^4.1.2",

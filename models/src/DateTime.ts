@@ -28,16 +28,16 @@ class _Domain extends Values.AggregateDomain<Value> {
             time: TimeDomain
         })
     }
-    asString(format?: string) {
+    asString(format?: Introspection.Format) {
         const domain = this;
-        return new class {
-            from(text: string|null, options?: { onError: (err: any) => void }): null|Value {
+        return format?.standard.toLowerCase() === 'iso8601' && format?.definition.toLowerCase() === 'datetime' ? this.asISO() : format !== undefined ? undefined : new class {
+            from(text: string|null): null|Value {
                 if(text === null) return null;
-                return domain.fromISOString(text, options);
+                return domain.fromISOString(text);
             }
-            to(value: Value|null) { 
+            to(value: Value|null): string|null { 
                 if(value === null) return null;
-                return domain.asLuxon().to(value).toISO() || '';
+                return domain.asLuxon().to(value)?.toISO() || null;
             }
         }
     };
@@ -45,35 +45,27 @@ class _Domain extends Values.AggregateDomain<Value> {
     asISO() {
         const domain = this;
         return {
-            time() { return undefined },
-            dateTime()  { return undefined },
-            duration()  { return undefined },
-            interval()  { return undefined },
-            recurrence()  { return undefined },
-            date() {
-                return {
-                    from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
-                        if(isoString === null) return null;
-                        const luxon = Luxon.DateTime.fromISO(isoString);
-                        if(!luxon.isValid) {
-                            if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
-                            return null;
-                        }
-                        return domain.asLuxon().from(luxon);
-                    },
-                    to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
-                        if(value === null) return null;
-                        return domain.asLuxon().to(value)?.toISODate() || null;
-                    }                
+            from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                if(isoString === null) return null;
+                const luxon = Luxon.DateTime.fromISO(isoString);
+                if(!luxon.isValid) {
+                    if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
+                    return null;
                 }
-            }
+                return domain.asLuxon().from(luxon);
+            },
+            to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                if(value === null) return null;
+                return domain.asLuxon().to(value)?.toISODate() || null;
+            }                
         }
     }
 
     asLuxon() { 
         const domain = this;
         return {
-            from(luxon: Luxon.DateTime): Value|null { 
+            from(luxon: Luxon.DateTime|null): Value|null { 
+                if(luxon === null) return null;
                 return { date: {
                     year: luxon.year, 
                     month: luxon.month, 
@@ -83,26 +75,21 @@ class _Domain extends Values.AggregateDomain<Value> {
                     minute: luxon.minute,
                     second: luxon.second
                  } };
-            }, to(value: Value, options?: { onError: (err: any) => void }): Luxon.DateTime {
-                const result = Luxon.DateTime.fromObject({
+            }, to(value: Value|null): Luxon.DateTime|null {
+                if(value === null) return null;
+                return Luxon.DateTime.fromObject({
                     year: value.date?.year,
                     month: value.date?.month,
                     day: value.date?.day,
                     hour: value.time?.hour,
                     minute: value.time?.minute,
                     second: value.time?.second
-                });
-                if(!result.isValid && options?.onError)
-                    options.onError(result.invalidExplanation)
-                return result;
+                })
             }
         };
     }
-    fromISOString(text: string, options?: { onError: (err: any) => void }): null|Value {
-        const luxon = Luxon.DateTime.fromISO(text);
-        if(!luxon.isValid && options?.onError)
-            options.onError(luxon.invalidExplanation)
-        return this.asLuxon().from(luxon);
+    fromISOString(text: string): null|Value {
+        return this.asLuxon().from(Luxon.DateTime.fromISO(text));
     }
     fromJSDate(date: Date): null|Value {
         return this.asLuxon().from(Luxon.DateTime.fromJSDate(date));

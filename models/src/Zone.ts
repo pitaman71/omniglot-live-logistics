@@ -31,9 +31,9 @@ class _Domain extends Values.AggregateDomain<Value> {
             minutes: Values.TheNumberDomain
         })
     }
-    asString(format?: string) { 
+    asString(format?: Introspection.Format) {
         const domain = this;
-        return {
+        return format !== undefined ? undefined : {
             from(text: string): Partial<Value> { return domain.getByName(text) },
             to(value: Partial<Value>): string { return value.name || '' }
         };

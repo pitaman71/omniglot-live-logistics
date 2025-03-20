@@ -16,8 +16,8 @@ export interface Value {
 }
 
 class _Domain extends Introspection.Domain<Value> {
-    asString(format?: string) { 
-        return {
+    asString(format?: Introspection.Format) {
+        return format !== undefined ? undefined : {
             from(text: string, options?: { onError: (err: any) => void }): null|Value { 
                 let sense:'inside'|'outside' = 'outside';
                 let radius: { miles: number }|{ kilometers: number }|undefined;

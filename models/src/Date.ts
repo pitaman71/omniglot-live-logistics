@@ -28,13 +28,32 @@ class _Domain extends Values.AggregateDomain<Value> {
             day: new Values.RangeDomain(makePath('Domain.day'),1, 31, 0)
         }, ['year', 'month', 'day' ])
     }
-    asString(format?: string) { 
+    asISO() {
         const domain = this;
         return {
-            from(text: string, options?: { onError: (err: any) => void }): null|Partial<Value> {
+            from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                if(isoString === null) return null;
+                const luxon = Luxon.DateTime.fromISO(isoString);
+                if(!luxon.isValid) {
+                    if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
+                    return null;
+                }
+                return domain.asLuxon().from(luxon);
+            },
+            to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                if(value === null) return null;
+                return domain.asLuxon().to(value)?.toISODate() || null;
+            }
+        
+        }
+    }
+
+    asString(format?: Introspection.Format) { 
+        const domain = this;
+        return format?.standard.toLowerCase() === 'iso8601' && format?.definition.toLowerCase() === 'date' ? this.asISO() : format !== undefined ? undefined : {
+            from(text: string): null|Partial<Value> {
                 const luxon = Luxon.DateTime.fromISO(text);
                 if(!luxon.isValid) {
-                    if(options?.onError) options.onError(luxon.invalidReason)
                     return null;
                 } else {
                     return {
@@ -46,34 +65,6 @@ class _Domain extends Values.AggregateDomain<Value> {
             },
             to(value: Partial<Value>): string {
                 return domain.asLuxon().to(value)?.toISODate() || '';
-            }
-        }
-    }
-    asISO() {
-        const domain = this;
-        return {
-            time() { return undefined },
-            dateTime()  { return undefined },
-            duration()  { return undefined },
-            interval()  { return undefined },
-            recurrence()  { return undefined },
-            date() {
-                return {
-                    from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
-                        if(isoString === null) return null;
-                        const luxon = Luxon.DateTime.fromISO(isoString);
-                        if(!luxon.isValid) {
-                            if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
-                            return null;
-                        }
-                        return domain.asLuxon().from(luxon);
-                    },
-                    to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
-                        if(value === null) return null;
-                        return domain.asLuxon().to(value)?.toISODate() || null;
-                    }
-                
-                }
             }
         }
     }
@@ -98,7 +89,6 @@ class _Domain extends Values.AggregateDomain<Value> {
         }
     }
     fromBlank() { return {} }
-    
 }
 export const Domain = new _Domain(makePath('Domain'));
 directory.add(Domain);

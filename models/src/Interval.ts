@@ -31,17 +31,17 @@ export const Domain = new class _Domain extends Values.AggregateDomain<Value> {
             duration: DurationDomain
         });
     }
-    asString(format?: string) { 
+    asString(format?: Introspection.Format) { 
         const domain = this;
-        return {
-            from(text: string) {
+        return format?.standard.toLowerCase() === 'iso8601' && format?.definition.toLowerCase() === 'interval' ? this.asISO() : format !== undefined ? undefined : {
+            from(text: string): null|Value {
                 let luxon: Luxon.Interval|undefined;
                 luxon = Luxon.Interval.fromISO(text);
                 if(!luxon.isValid) {
                     return null;
                 }
-                const start = luxon.start && DateTimeDomain.asLuxon().from(luxon.start) || undefined;
-                const end = luxon.end && DateTimeDomain.asLuxon().from(luxon.end) || undefined;
+                const start = DateTimeDomain.asLuxon().from(luxon.start) || undefined;
+                const end = DateTimeDomain.asLuxon().from(luxon.end) || undefined;
                 if(!start || !end) return null;
                 return domain.from(start, end)
             },
@@ -55,53 +55,51 @@ export const Domain = new class _Domain extends Values.AggregateDomain<Value> {
     asISO() {
         const domain = this;
         return {
-            date() { return undefined },
-            dateTime()  { return undefined },
-            time()  { return undefined },
-            duration()  { return undefined },
-            recurrence()  { return undefined },
-            interval() {
-                return {
-                    from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
-                        if(isoString === null) return null;
-                        const luxon = Luxon.Interval.fromISO(isoString);
-                        if(!luxon.isValid) {
-                            if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
-                            return null;
-                        }
-                        return {
-                            start: DateTimeDomain.asLuxon().from(luxon.start) || undefined,
-                            end: DateTimeDomain.asLuxon().from(luxon.end) || undefined
-                        }
-                    },
-                    to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
-                        if(value === null || value.start === undefined || value.end === undefined) return null;
-                        const luxon = Luxon.Interval.fromDateTimes(
-                            DateTimeDomain.asLuxon().to(value.start), 
-                            DateTimeDomain.asLuxon().to(value.end));
-                        return luxon.toISO() || null;
-                    }
-                
+            from(isoString: string|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                if(isoString === null) return null;
+                const luxon = Luxon.Interval.fromISO(isoString);
+                if(!luxon.isValid) {
+                    if(options?.onError) options.onError({ kind: 'syntaxError', tokenType: 'ISO 8601 date string'})
+                    return null;
                 }
+                return {
+                    start: DateTimeDomain.asLuxon().from(luxon.start) || undefined,
+                    end: DateTimeDomain.asLuxon().from(luxon.end) || undefined
+                }
+            },
+            to(value: Value|null, options?: { onError?: (error: Introspection.Parsing.Error) => void }) {
+                if(value === null || value.start === undefined || value.end === undefined) return null;
+                const start_ = DateTimeDomain.asLuxon().to(value.start);
+                const end_ = DateTimeDomain.asLuxon().to(value.end);
+                if(!start_ || !end_) return null;
+                const luxon = Luxon.Interval.fromDateTimes(start_, end_);
+                return luxon.toISO() || null;
             }
+        
         }
     }
 
     asEnumeration(maxCount: number) { return undefined; }
     cmp(a: Value, b:Value): undefined|-1|0|1 {
-        let code = Introspection.Comparison.cmp(a?.start, b?.start, DateTimeDomain.cmp);
+        let code;
+        if(a.start === undefined || b.start === undefined) {
+            return Introspection.Comparison.cmp(a.start, b.start);
+        }
+        if(a.end === undefined || b.end === undefined) {
+            return Introspection.Comparison.cmp(a.end, b.end);
+        }
+        code = DateTimeDomain.cmp(a.start, b.start);
         if(code != 0) return code;
-        code = Introspection.Comparison.cmp(a?.end, b?.end, DateTimeDomain.cmp);
-        return code;        
+        code = DateTimeDomain.cmp(a.end, b.end);
+        return code;    
     }
 
     from(start: _DateTime|undefined|null, end: _DateTime|undefined|null, duration?: _Duration|null): null|Value {
-        let text: string|undefined;
-        let luxon: Luxon.Interval|undefined;
         if(!start) {
             // skip
         } else if(!end && !!duration) {
-            end = DateTimeDomain.asLuxon().from(DateTimeDomain.asLuxon().to(start)?.plus(DurationDomain.toLuxon(duration))) || undefined;
+            const luxon = DateTimeDomain.asLuxon().to(start)?.plus(DurationDomain.toLuxon(duration)) || null;
+            end = DateTimeDomain.asLuxon().from(luxon) || undefined;
         } else if(!!end  && !duration) {
             const s = DateTimeDomain.asLuxon().to(start);
             const e = DateTimeDomain.asLuxon().to(end);
@@ -116,15 +114,18 @@ export const Domain = new class _Domain extends Values.AggregateDomain<Value> {
         const domain = this;
         return {
             from(luxon: Luxon.Interval) { 
-                const start = luxon.start ? DateTimeDomain.asLuxon().from(luxon.start) : undefined;
-                const end = luxon.end ? DateTimeDomain.asLuxon().from(luxon.end) : undefined;
+                const start = DateTimeDomain.asLuxon().from(luxon.start);
+                const end = DateTimeDomain.asLuxon().from(luxon.end);
                 return { start, end };
             },
             to(value: Value) {
                 if(!value.start || !value.end) return null;
+                const start_ = DateTimeDomain.asLuxon().to(value.start);
+                const end_ = DateTimeDomain.asLuxon().to(value.end);
+                if(!start_ || !end_) return null;
                 return Luxon.Interval.fromDateTimes(
-                    DateTimeDomain.asLuxon().to(value.start), 
-                    DateTimeDomain.asLuxon().to(value.end)
+                    start_, 
+                    end_
                 );
             }
         }

@@ -1,20 +1,19 @@
 import React from 'react';
-import * as Introspection from 'typescript-introspection';
 import { Address } from 'omniglot-live-logistics-models';
-import * as Controls from './Controls';
+import { Controls } from '@pitaman71/omniglot-live-reactjs';
 import './Address.css';
 
-export const Summary: Controls.Summary<Address.Value> = ({
-    domain,
-    value,
-    client,
-    children
-}): JSX.Element => {
-    if (!value?.addressLine1) {
-        return <React.Fragment>{children}</React.Fragment>;
+export const Summary: Controls.Summary<Address.Value> = (props): JSX.Element => {
+    if (props.kind !== 'scalar') {
+        return <React.Fragment>{props.children}</React.Fragment>;
+    }
+    const { domain, value, client} = props.scalar;
+    const asString = domain?.asString() || Address.Domain.asString();
+
+    if (!value || !asString) {
+        return <React.Fragment>{props.children}</React.Fragment>;
     }
 
-    const asString = domain?.asString() || Address.Domain.asString();
 
     return (
         <div className="address-summary">
@@ -24,11 +23,11 @@ export const Summary: Controls.Summary<Address.Value> = ({
     );
 };
 
-export const Document: Controls.Document<Address.Value> = ({
-    domain,
-    value,
-    client
-}): JSX.Element => {
+export const Document: Controls.Document<Address.Value> = (props): JSX.Element => {
+    if(props.kind !== 'scalar') {
+        return <div className="address-detail empty">No address specified</div>;
+    }
+    const { domain, value, client } = props.scalar;
     if (!value && !client) {
         return <div className="address-detail empty">No address specified</div>;
     }

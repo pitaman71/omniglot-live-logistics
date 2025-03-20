@@ -1,21 +1,18 @@
 import React from 'react';
 import * as Introspection from 'typescript-introspection';
 import { DateTime } from 'omniglot-live-logistics-models';
-import * as Controls from './Controls';
+import { Controls } from '@pitaman71/omniglot-live-reactjs';
 import './DateTime.css';
 
-export const Summary: Controls.Summary<DateTime.Value> = ({ 
-    domain,
-    value, 
-    client,
-    children
-}): JSX.Element => {
-    if (!value?.date && !value?.time) {
-        return <React.Fragment>{children}</React.Fragment>;
+export const Summary: Controls.Summary<DateTime.Value> = (props): JSX.Element => {
+    if (props.kind !== 'scalar') {
+        return <React.Fragment>{props.children}</React.Fragment>;
     }
-
+    const { domain, value, client} = props.scalar;
     const asString = domain?.asString() || DateTime.Domain.asString();
-
+    if (!asString || (!value?.date && !value?.time)) {
+        return <React.Fragment>{props.children}</React.Fragment>;
+    }
     return (
         <div className="datetime-preview">
             {asString.to(value)}
@@ -23,12 +20,14 @@ export const Summary: Controls.Summary<DateTime.Value> = ({
     );
 };
 
-export const Document: Controls.Document<DateTime.Value> = ({ 
-    value, 
-    client 
-}): JSX.Element => {
+export const Document: Controls.Document<DateTime.Value> = (props): JSX.Element => {
+    const empty = () => <div className="datetime-detail empty">No date/time specified</div>;
+    if (props.kind !== 'scalar') {
+        return empty();
+    }
+    const { domain, value, client} = props.scalar;
     if (!value?.date && !value?.time) {
-        return <div className="datetime-detail empty">No date/time specified</div>;
+        return empty();
     }
     
     return (
